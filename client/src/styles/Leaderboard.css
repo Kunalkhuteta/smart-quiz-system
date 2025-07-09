@@ -1,0 +1,45 @@
+.leaderboard-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 25px 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.leaderboard-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 28px;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.leaderboard-table thead {
+  background-color: #f5f5f5;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  text-align: center;
+  padding: 12px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.leaderboard-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.leaderboard-table th {
+  color: #555;
+}
+
+.leaderboard-table td {
+  color: #333;
+}

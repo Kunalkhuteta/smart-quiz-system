@@ -1,0 +1,78 @@
+.attempts-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 25px 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.attempts-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 26px;
+  color: #333;
+}
+
+.no-attempts {
+  text-align: center;
+  font-size: 18px;
+  color: #777;
+}
+
+.attempts-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.attempt-item {
+  padding: 18px 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  background-color: #f0f0f0;
+  border-left: 6px solid #2196f3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.attempt-item:hover {
+  transform: translateY(-4px);
+  background-color: #e3f2fd;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.attempt-item p {
+  margin: 5px 0;
+  color: #444;
+}
+
+.attempt-item button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.attempt-item button:hover {
+  background-color: #388e3c;
+}

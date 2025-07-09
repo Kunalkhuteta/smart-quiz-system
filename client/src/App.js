@@ -1,23 +1,43 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+// client/src/App.js
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Register from "./pages/Register";
+import Login from "./pages/login";
+import Dashboard from "./pages/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
+import Attempts from "./pages/Attempts";
+import AttemptDetails from "./pages/AttemptDetails";
+import Leaderboard from "./pages/Leaderboard";
+import "./App.css"
+import AdminPanel from "./pages/AdminPanel";
+
 
 function App() {
-  const [message, setMessage] = useState("Loading...");
-
-  useEffect(() => {
-    axios.get("/api/test")
-      .then(res => setMessage(res.data.msg))
-      .catch(err => {
-        console.error("Axios error:", err.message);
-        setMessage("❌ Could not connect to backend");
-      });
-  }, []);
-
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Smart Quiz System</h1>
-      <p>{message}</p>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<h2>Home</h2>} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected Route */}
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+
+<Route path="/attempts" element={<Attempts />} />
+ <Route path="/attempts/:id" element={<AttemptDetails />} />
+
+<Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/admin" element={<AdminPanel />} />
+
+      </Routes>
+    </Router>
   );
 }
 
