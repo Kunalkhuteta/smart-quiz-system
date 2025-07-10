@@ -20,7 +20,7 @@ const Login = () => {
     e.preventDefault();
     try {
       //this will take the direction to server->index.js->by ..../api it goes to authRoutes->/api/login 
-      const res = await axios.post("/api/login", user);
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/login`, user);
       
       setMsg("Login successful");
 
