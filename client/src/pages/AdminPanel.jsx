@@ -10,12 +10,12 @@ const AdminPanel = () => {
       try {
         const token = JSON.parse(localStorage.getItem("user"))?.token;
 
-        const usersRes = await axios.get("/api/quiz/admin/users", {
+        const usersRes = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/admin/users`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(usersRes.data);
 
-        const attemptsRes = await axios.get("/api/quiz/admin/attempts", {
+        const attemptsRes = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/admin/attempts`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setAttempts(attemptsRes.data.attempts);

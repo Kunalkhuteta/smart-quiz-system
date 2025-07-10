@@ -29,7 +29,7 @@ console.log("📦 Attempt ID from URL:", id);
           },
         };
 
-        const res = await axios.get(`/api/quiz/attempts/${id}`, config);
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/attempts/${id}`, config);
         console.log("✅ Fetched attempt:", res.data);
         setAttempt(res.data);
       } catch (err) {

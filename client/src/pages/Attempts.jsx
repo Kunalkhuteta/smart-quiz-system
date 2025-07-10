@@ -13,7 +13,7 @@ const Attempts = () => {
         // const user = JSON.parse(localStorage.getItem("user"));
         console.log("🧠 user:", user);
         console.log("📦 Sending userId:", user.id);
-        const res = await axios.get(`/api/quiz/attempts/?userId=${user.id}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/attempts/?userId=${user.id}`);
         console.log("📨 Raw response:", res);
         console.log("✅ Attempts from backend:", res.data.attempts);
 

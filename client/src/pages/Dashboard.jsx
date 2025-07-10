@@ -14,7 +14,7 @@ const Dashboard = () => {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const generateQuiz = async () => {
-    const res = await axios.post("/api/quiz/generate");
+    const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/generate`);
     setQuestions(res.data.questions);
     setAnswers({});
     setSubmitted(false);
@@ -44,7 +44,7 @@ const Dashboard = () => {
     // console.log("user id", user?._id);
 
     try {
-      await axios.post("/api/quiz/submit", {
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/submit`, {
         userId: user.id,               // ✅ This must be present
         username: user.username,
         answers: questions.map((q, i) => ({
