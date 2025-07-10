@@ -19,7 +19,7 @@ const Register = () => {
     e.preventDefault();
     try {
       //this will take the direction to server->index.js->by ..../api it goes to authRoutes->/api/register 
-      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/register`, user);
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/register`, user);
       //after res with data.message will be seen
       setMsg(res.data.message);
       
