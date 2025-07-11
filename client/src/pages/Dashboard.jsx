@@ -81,7 +81,9 @@ const Dashboard = () => {
   <Link to="/admin" className="button-link admin">🛠️ Admin Panel</Link>
 )}
   <div className="dashboard-header">📊 Welcome, {user?.name} 
-    
+    <button className="button-link" onClick={()=>{
+      handleLogout();
+    }}>Logout</button>
     </div> 
 
   <div className="user-info">
