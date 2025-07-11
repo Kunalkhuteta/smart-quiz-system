@@ -76,7 +76,7 @@ const Dashboard = () => {
 
   return (
     <div>
-        <button className="button-link" onClick={()=>{
+        <button className="button-link logout" onClick={()=>{
           handleLogout();
         }}>Logout</button>
       <div className="dashboard-container">
