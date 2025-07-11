@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {  Link, useNavigate } from "react-router-dom";
-import "../styles/Dashboard.css"; 
+import { Link, useNavigate } from "react-router-dom";
+import "../styles/Dashboard.css";
 const user = JSON.parse(localStorage.getItem("user"));
 
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  
+
   // const user = JSON.parse(localStorage.getItem("user"));
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
@@ -20,7 +20,7 @@ const Dashboard = () => {
     setSubmitted(false);
     setScore(0);
   };
-  
+
   const handleOptionChange = (qIndex, option) => {
     setAnswers({ ...answers, [qIndex]: option });
   };
@@ -37,7 +37,7 @@ const Dashboard = () => {
     setSubmitted(true);
 
     const user = JSON.parse(localStorage.getItem("user"));
-    
+
     console.log("hi");
 
     console.log("🧠 Current user:", user); // debug
@@ -61,7 +61,7 @@ const Dashboard = () => {
       console.error("❌ Failed to save quiz attempt:", err);
       alert("❌ Could not save your attempt");
     }
-   
+
 
   };
 
@@ -76,36 +76,38 @@ const Dashboard = () => {
 
   return (
     <div>
-        <button className="button-link logout" onClick={()=>{
+      <div className="navbar">
+        <button className="button-link logout" onClick={() => {
           handleLogout();
         }}>Logout</button>
+      </div>
       <div className="dashboard-container">
-  {user?.isAdmin && (
-  <Link to="/admin" className="button-link admin">🛠️ Admin Panel</Link>
-)}
-  <div className="dashboard-header">📊 Welcome, {user?.name} 
-    </div> 
+        {user?.isAdmin && (
+          <Link to="/admin" className="button-link admin">🛠️ Admin Panel</Link>
+        )}
+        <div className="dashboard-header">📊 Welcome, {user?.name}
+        </div>
 
-  <div className="user-info">
-    <p><strong>📧 Email:</strong> {user?.email}</p>
-    <p><strong>🆔 ID:</strong> {user?.id}</p>
-  </div>
-      <div className="button-group">
-        <Link to="/attempts" className="button-link">📜 View Attempts</Link>
-  <Link to="/leaderboard" className="button-link">🏆 View Leaderboard</Link>
-  </div>
+        <div className="user-info">
+          <p><strong>📧 Email:</strong> {user?.email}</p>
+          <p><strong>🆔 ID:</strong> {user?.id}</p>
+        </div>
+        <div className="button-group">
+          <Link to="/attempts" className="button-link">📜 View Attempts</Link>
+          <Link to="/leaderboard" className="button-link">🏆 View Leaderboard</Link>
+        </div>
 
-      <hr />
+        <hr />
 
 
-       <div className="quiz-section">
-    <h3>🚀 Start Your Quiz</h3>
-      {questions.length === 0 && (
-        <button onClick={generateQuiz}>Generate Hindi Quiz</button>
-      )}
-       </div>
-</div>
-        
+        <div className="quiz-section">
+          <h3>🚀 Start Your Quiz</h3>
+          {questions.length === 0 && (
+            <button onClick={generateQuiz}>Generate Hindi Quiz</button>
+          )}
+        </div>
+      </div>
+
 
 
       {questions.length > 0 && (

@@ -45,7 +45,7 @@ const Login = () => {
         <br />
         <button type="submit">Log In</button>
         <br /><br /><br />
-        <b><i>wants to register -- </i></b>
+        <b><i>Not Registered Yet! Click </i></b>
 
         <button onClick={()=> navigate('/register')}> Register </button>
       </form>
