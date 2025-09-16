@@ -36,6 +36,7 @@ function App() {
 <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/admin" element={<AdminPanel />} />
 
+
       </Routes>
     </Router>
   );

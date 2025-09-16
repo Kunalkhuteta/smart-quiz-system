@@ -1,14 +1,17 @@
-
 const express = require("express");
 const router = express.Router();
 const QuizAttempt = require("../models/QuizAttempt");
-const { default: mongoose } = require("mongoose");
+const PDFDocument = require("pdfmake");
+
 const User = require("../models/user");
-const {isAuthenticated, protect, isAdmin } = require("../middlewares/authMiddleware");
 
+const {  protect, isAdmin } = require("../middlewares/authMiddleware");
 
+// ----------------------------
+// Generate Quiz (Dummy Example)
+// ----------------------------
 router.post("/generate", async (req, res) => {
-  try { 
+  try {
     const dummyQuestions = [
       {
         question: "भारत का राष्ट्रीय पशु कौन सा है?",
@@ -34,24 +37,15 @@ router.post("/generate", async (req, res) => {
   }
 });
 
+// ----------------------------
+// Submit Attempt
+// ----------------------------
 router.post("/submit", async (req, res) => {
   try {
-    const {   userId, username, answers, score, total } = req.body;
+    const { userId, username, answers, score, total } = req.body;
 
-    const attempt = new QuizAttempt({
-      
-      userId,
-      username,
-      answers,
-      score,
-      total,
-    });
-
+    const attempt = new QuizAttempt({ userId, username, answers, score, total });
     await attempt.save();
-
-    // Fetch all for debugging
-    const all = await QuizAttempt.find({ userId });
-    console.log("🧠 Attempts now:", all.length); // <- This will show 1 again and again
 
     res.status(200).json({ message: "✅ Attempt saved!" });
   } catch (err) {
@@ -60,17 +54,13 @@ router.post("/submit", async (req, res) => {
   }
 });
 
-// GET /api/quiz/attempts/:userId
+// ----------------------------
+// Get Attempts by User
+// ----------------------------
 router.get("/attempts", async (req, res) => {
   try {
     const { userId } = req.query;
-    console.log("📥 Incoming userId:", userId);
-
     const attempts = await QuizAttempt.find({ userId });
-
-
-    console.log("📤 Found attempts:", attempts.length);
-
     res.json({ attempts });
   } catch (err) {
     console.error("❌ Fetch error:", err);
@@ -78,17 +68,13 @@ router.get("/attempts", async (req, res) => {
   }
 });
 
-
-
-const Attempt = require("../models/QuizAttempt"); // ✅ Make sure this is at the top
-
-// GET a single attempt by ID
+// ----------------------------
+// Get Attempt by ID
+// ----------------------------
 router.get("/attempts/:id", async (req, res) => {
   try {
-    const attempt = await Attempt.findById(req.params.id)
-    if (!attempt) {
-      return res.status(404).json({ message: "Attempt not found" });
-    }
+    const attempt = await QuizAttempt.findById(req.params.id);
+    if (!attempt) return res.status(404).json({ message: "Attempt not found" });
     res.json(attempt);
   } catch (error) {
     console.error("❌ Attempt details error:", error);
@@ -96,59 +82,72 @@ router.get("/attempts/:id", async (req, res) => {
   }
 });
 
-router.get("/leaderboard", async (req, res) => {
+router.get("/leaderboard", protect, async (req, res) => {
   try {
-    const leaderboard = await QuizAttempt.aggregate([
-      {
-        $group: {
-          _id: "$userId",
-          totalScore: { $sum: "$score" },
-          attempts: { $sum: 1 },
-          maxScore: { $max: "$score" },
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "_id",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $unwind: "$user",
-      },
-      {
-        $project: {
-          username: "$user.name",
-          email: "$user.email",
-          totalScore: 1,
-          attempts: 1,
-          maxScore: 1,
-        },
-      },
-      {
-        $sort: { totalScore: -1 },
-      },
-    ]);
+    let teacherId;
 
-    res.json({ leaderboard });
+    if (req.user.role === "teacher") {
+      // teacher sees their own class leaderboard
+      teacherId = req.user._id;
+    } else if (req.user.role === "student") {
+      // student sees leaderboard of their teacher's class
+      if (!req.user.referredBy) {
+        return res.status(400).json({ message: "You are not linked to any teacher." });
+      }
+      teacherId = req.user.referredBy;
+    } else {
+      return res.status(403).json({ message: "Not allowed" });
+    }
+
+    // get all students under that teacher
+    const students = await User.find({ referredBy: teacherId, role: "student" });
+
+    // get attempts for those students
+    const attempts = await QuizAttempt.find({ userId: { $in: students.map(s => s._id) } });
+
+    // group scores
+    const scores = {};
+    attempts.forEach((a) => {
+      const uid = a.userId.toString();
+      if (!scores[uid]) scores[uid] = 0;
+      scores[uid] += a.score;
+    });
+
+    // build leaderboard
+    const leaderboard = students.map((s) => ({
+      userId: s._id,
+      username: s.name,
+      totalScore: scores[s._id.toString()] || 0,
+    }));
+
+    // sort by score
+    leaderboard.sort((a, b) => b.totalScore - a.totalScore);
+
+    res.json(leaderboard);
   } catch (err) {
     console.error("❌ Leaderboard error:", err);
     res.status(500).json({ message: "Server Error" });
   }
 });
 
+
+
+// ----------------------------
+// Admin – Get All Users
+// ----------------------------
 router.get("/admin/users", protect, isAdmin, async (req, res) => {
   try {
     const users = await User.find().select("-password");
-    res.json(users); // ✅ MUST return an array
+    res.json(users);
   } catch (err) {
     console.error("Admin Users Fetch Error:", err);
     res.status(500).json({ message: "Server Error" });
   }
 });
 
+// ----------------------------
+// Admin – Get All Attempts
+// ----------------------------
 router.get("/admin/attempts", protect, isAdmin, async (req, res) => {
   try {
     const attempts = await QuizAttempt.find().sort({ submittedAt: -1 });
@@ -158,16 +157,15 @@ router.get("/admin/attempts", protect, isAdmin, async (req, res) => {
   }
 });
 
-// DELETE /api/quiz/admin/users/:id
-router.delete("/admin/user/:userId", isAuthenticated, isAdmin, async (req, res) => {
+// ----------------------------
+// Admin – Delete User & Attempts
+// ----------------------------
+router.delete("/admin/user/:userId", protect, isAdmin, async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    // 1. Delete user
     await User.findByIdAndDelete(userId);
-
-    // 2. Delete all attempts by user
-    await QuizAttempt.deleteMany({ userId: userId });
+    await QuizAttempt.deleteMany({ userId });
 
     res.status(200).json({ message: "✅ User and attempts deleted successfully." });
   } catch (error) {
@@ -176,8 +174,9 @@ router.delete("/admin/user/:userId", isAuthenticated, isAdmin, async (req, res) 
   }
 });
 
-
-// DELETE /api/quiz/admin/attempts/:id
+// ----------------------------
+// Admin – Delete Attempt
+// ----------------------------
 router.delete("/admin/attempts/:id", protect, isAdmin, async (req, res) => {
   try {
     const attempt = await QuizAttempt.findById(req.params.id);
@@ -190,6 +189,7 @@ router.delete("/admin/attempts/:id", protect, isAdmin, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 module.exports = router;

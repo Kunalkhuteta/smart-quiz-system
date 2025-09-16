@@ -3,12 +3,17 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 const quizRoutes = require("./routes/quizRoutes");
+const session = require("express-session");
+const passport = require("passport");
+const authRoutes = require("./routes/authRoutes");
+const referralRoutes = require("./routes/referralRoutes");
 
 
 const app = express();
+// app.use("/api/leaderboard", require("./routes/leaderboardRoutes"));
 
 // Middleware
-app.use(cors());
+app.use(cors());    
 app.use(express.json());
 
 app.use("/api/quiz", quizRoutes);
@@ -40,11 +45,11 @@ app.get("/api/quiz/attempts/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-// app.post("/api/testlogin", (req, res) => {
-//   res.json({ message: "Test login success", data: req.body });
-// });
 
-// DB + Server
+app.use("/api/referrals", referralRoutes);
+
+app.use("/api/auth", authRoutes);
+
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {

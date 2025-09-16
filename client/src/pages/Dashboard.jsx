@@ -5,6 +5,7 @@ import "../styles/Dashboard.css";
 const user = JSON.parse(localStorage.getItem("user"));
 
 
+
 const Dashboard = () => {
   const navigate = useNavigate();
 
@@ -80,6 +81,7 @@ const Dashboard = () => {
         <button className="button-link logout" onClick={() => {
           handleLogout();
         }}>Logout</button>
+        
       </div>
       <div className="dashboard-container">
         {user?.isAdmin && (
@@ -91,6 +93,13 @@ const Dashboard = () => {
         <div className="user-info">
           <p><strong>📧 Email:</strong> {user?.email}</p>
           <p><strong>🆔 ID:</strong> {user?.id}</p>
+          {user.role === "teacher" && (
+  <div className="mt-4">
+    <p className="text-gray-700">Your Referral ID:
+   {console.log(user.referralId)}  {user.referralId}
+    </p>
+  </div>
+)}
         </div>
         <div className="button-group">
           <Link to="/attempts" className="button-link">📜 View Attempts</Link>
@@ -105,6 +114,9 @@ const Dashboard = () => {
           {questions.length === 0 && (
             <button onClick={generateQuiz}>Generate Hindi Quiz</button>
           )}
+
+   
+
         </div>
       </div>
 
@@ -158,6 +170,7 @@ const Dashboard = () => {
               <p>आपके अंक: {score} / {questions.length}</p>
             </div>
           )}
+          
         </form>
       )}
     </div>

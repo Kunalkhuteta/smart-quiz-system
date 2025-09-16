@@ -1,0 +1,15 @@
+{
+  "name": "smart-quiz-system",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "client": "cd client && npm start",
+    "server": "cd server && nodemon index.js"
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0",
+    "nodemon": "^2.0.22"
+  },
+  "dependencies": {
+    "axios": "^1.10.0"
+  }
+}

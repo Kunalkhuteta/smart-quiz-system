@@ -21,17 +21,17 @@ const Login = () => {
     try {
       //this will take the direction to server->index.js->by ..../api it goes to authRoutes->/api/login 
       const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/login`, user);
-      
+
       setMsg("Login successful");
 
       // save token and user data
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
-
-      // navigate or reload
+ 
+      // navigate or reload 
       window.location.href = "/dashboard"; // change if using React Router
     } catch (err) {
-      setMsg(err.response?.data?.message || "Login failed");
+      setMsg(err.response?.data?.message || "Login failed yhi");
     }
   };
 
@@ -45,6 +45,7 @@ const Login = () => {
         <br />
         <button type="submit">Log In</button>
         <br /><br /><br />
+
         <b><i>Not Registered Yet! Click </i></b>
 
         <button onClick={()=> navigate('/register')}> Register </button>

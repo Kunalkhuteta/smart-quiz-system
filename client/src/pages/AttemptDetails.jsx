@@ -16,7 +16,7 @@ console.log("📦 Attempt ID from URL:", id);
     const fetchAttempt = async () => { 
       try {   
         const user = JSON.parse(localStorage.getItem("user"));
-        const token = user?.token;
+const token = localStorage.getItem("token");
         console.log(token)
         if (!token) {
           setError("Unauthorized");
@@ -84,3 +84,4 @@ console.log("📦 Attempt ID from URL:", id);
 };
 
 export default ViewAttemptDetails;
+

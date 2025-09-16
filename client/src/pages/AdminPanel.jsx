@@ -8,7 +8,7 @@ const AdminPanel = () => {
   useEffect(() => {
     const fetchAdminData = async () => {
       try {
-        const token = JSON.parse(localStorage.getItem("user"))?.token;
+        const token =localStorage.getItem("token");
 
         const usersRes = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/admin/users`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -40,6 +40,7 @@ const AdminPanel = () => {
               <tr>
                 <th style={styles.th}>👤 Name</th>
                 <th style={styles.th}>📧 Email</th>
+                <th style={styles.th}>Role</th>
                 <th style={styles.th}>🛡️ Admin</th>
               </tr>
             </thead>
@@ -48,6 +49,7 @@ const AdminPanel = () => {
                 <tr key={index}>
                   <td style={styles.td}>{u.name}</td>
                   <td style={styles.td}>{u.email}</td>
+                  <td style={styles.td}>{u.role}</td>
                   <td style={styles.td}>{u.isAdmin ? "✅ Yes" : "❌ No"}</td>
                 </tr>
               ))}
