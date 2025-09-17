@@ -2,24 +2,27 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Dashboard.css";
+
 const user = JSON.parse(localStorage.getItem("user"));
-
-
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  // const user = JSON.parse(localStorage.getItem("user"));
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
+  const [certificateReady, setCertificateReady] = useState(false);
+
   const generateQuiz = async () => {
-    const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/generate`);
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_BASE_URL}/api/quiz/generate`
+    );
     setQuestions(res.data.questions);
     setAnswers({});
     setSubmitted(false);
     setScore(0);
+    setCertificateReady(false);
   };
 
   const handleOptionChange = (qIndex, option) => {
@@ -37,37 +40,60 @@ const Dashboard = () => {
     setScore(correct);
     setSubmitted(true);
 
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    console.log("hi");
-
-    console.log("🧠 Current user:", user); // debug
-    // console.log("user id", user?._id);
-
     try {
-      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/quiz/submit`, {
-        userId: user.id,               // ✅ This must be present
-        username: user.username,
-        answers: questions.map((q, i) => ({
-          question: q.question,
-          selected: answers[i],
-          correct: q.answer
-        })),
-        score: correct,
-        total: questions.length
-      });
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/api/quiz/submit`,
+        {
+          userId: user.id,
+          username: user.username,
+          answers: questions.map((q, i) => ({
+            question: q.question,
+            selected: answers[i],
+            correct: q.answer,
+          })),
+          score: correct,
+          total: questions.length,
+        }
+      );
 
       console.log("✅ Quiz attempt submitted!");
+      setCertificateReady(true);
     } catch (err) {
       console.error("❌ Failed to save quiz attempt:", err);
       alert("❌ Could not save your attempt");
     }
-
-
   };
 
+  // 🎓 Download Certificate
+  const handleDownloadCertificate = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/api/certificates/generate`,
+        {
+          studentName: user.name,
+          quizName: "Hindi Quiz", // You can make this dynamic
+          obtainedMarks: score,
+          totalMarks: questions.length,
+        },
+        { responseType: "blob" } // important for PDF
+      );
 
-
+      // Create blob for download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `${user.name}-certificate.pdf`
+      );
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("❌ Error generating certificate:", error);
+      alert("❌ Could not generate certificate");
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -78,66 +104,84 @@ const Dashboard = () => {
   return (
     <div>
       <div className="navbar">
-        <button className="button-link logout" onClick={() => {
-          handleLogout();
-        }}>Logout</button>
-        
+        <button
+          className="button-link logout"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </div>
+
       <div className="dashboard-container">
         {user?.isAdmin && (
-          <Link to="/admin" className="button-link admin">🛠️ Admin Panel</Link>
+          <Link to="/admin" className="button-link admin">
+            🛠️ Admin Panel
+          </Link>
         )}
-        <div className="dashboard-header">📊 Welcome, {user?.name}
-        </div>
+
+        <div className="dashboard-header">📊 Welcome, {user?.name}</div>
 
         <div className="user-info">
-          <p><strong>📧 Email:</strong> {user?.email}</p>
-          <p><strong>🆔 ID:</strong> {user?.id}</p>
+          <p>
+            <strong>📧 Email:</strong> {user?.email}
+          </p>
+          <p>
+            <strong>🆔 ID:</strong> {user?.id}
+          </p>
           {user.role === "teacher" && (
-  <div className="mt-4">
-    <p className="text-gray-700">Your Referral ID:
-   {console.log(user.referralId)}  {user.referralId}
-    </p>
-  </div>
-)}
+            <div className="mt-4">
+              <p className="text-gray-700">
+                Your Referral ID: {user.referralId}
+              </p>
+            </div>
+          )}
         </div>
+
         <div className="button-group">
-          <Link to="/attempts" className="button-link">📜 View Attempts</Link>
-          <Link to="/leaderboard" className="button-link">🏆 View Leaderboard</Link>
+          <Link to="/attempts" className="button-link">
+            📜 View Attempts
+          </Link>
+          <Link to="/leaderboard" className="button-link">
+            🏆 View Leaderboard
+          </Link>
         </div>
 
         <hr />
-
 
         <div className="quiz-section">
           <h3>🚀 Start Your Quiz</h3>
           {questions.length === 0 && (
             <button onClick={generateQuiz}>Generate Hindi Quiz</button>
           )}
-
-   
-
         </div>
       </div>
-
-
 
       {questions.length > 0 && (
         <form>
           {questions.map((q, index) => (
             <div key={index} style={{ marginBottom: "20px" }}>
-              <p><strong>Q{index + 1}:</strong> {q.question}</p>
+              <p>
+                <strong>Q{index + 1}:</strong> {q.question}
+              </p>
               {q.options.map((option, i) => {
                 const isCorrect = submitted && option === q.answer;
-                const isWrong = submitted && answers[index] === option && option !== q.answer;
+                const isWrong =
+                  submitted && answers[index] === option && option !== q.answer;
 
                 return (
-                  <label key={i} style={{
-                    display: "block",
-                    marginBottom: "5px",
-                    color: isCorrect ? "green" : isWrong ? "red" : "black",
-                    fontWeight: isCorrect || isWrong ? "bold" : "normal"
-                  }}>
+                  <label
+                    key={i}
+                    style={{
+                      display: "block",
+                      marginBottom: "5px",
+                      color: isCorrect
+                        ? "green"
+                        : isWrong
+                        ? "red"
+                        : "black",
+                      fontWeight: isCorrect || isWrong ? "bold" : "normal",
+                    }}
+                  >
                     <input
                       type="radio"
                       name={`question-${index}`}
@@ -156,10 +200,12 @@ const Dashboard = () => {
             </div>
           ))}
 
-
-
           {!submitted && (
-            <button type="button" onClick={handleSubmit} className="button-link">
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="button-link"
+            >
               Submit Quiz
             </button>
           )}
@@ -167,10 +213,28 @@ const Dashboard = () => {
           {submitted && (
             <div>
               <h4>🎯 परिणाम:</h4>
-              <p>आपके अंक: {score} / {questions.length}</p>
+              <p>
+                आपके अंक: {score} / {questions.length}
+              </p>
+
+              {certificateReady && (
+                <button
+                  type="button"
+                  onClick={handleDownloadCertificate}
+                  className="button-link"
+                  style={{
+                    marginTop: "10px",
+                    backgroundColor: "#2E86C1",
+                    color: "white",
+                    padding: "8px 16px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  🎓 Download Certificate
+                </button>
+              )}
             </div>
           )}
-          
         </form>
       )}
     </div>
