@@ -3,84 +3,76 @@ const PDFDocument = require("pdfkit");
 
 const router = express.Router();
 
-router.post("/generate", async (req, res) => {
+router.post("/generate", (req, res) => {
   try {
-    const { name, quizName, obtainedMarks, maxMarks } = req.body;
+    const { studentName, quizName, obtainedMarks, totalMarks } = req.body;
 
-    if (!name || !quizName || obtainedMarks == null || maxMarks == null) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
-
-    // Create new PDF
     const doc = new PDFDocument({ size: "A4", margin: 50 });
 
-    // Headers for download
-    res.setHeader("Content-Disposition", "attachment; filename=certificate.pdf");
     res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=${studentName}-certificate.pdf`
+    );
+
     doc.pipe(res);
 
-    // ===== Certificate Border =====
-    doc.rect(20, 20, doc.page.width - 40, doc.page.height - 40)
-       .lineWidth(4)
-       .stroke("#2E86C1"); // Blue border
+    // Border
+    doc.rect(20, 20, 555, 800).stroke("#0a5275");
 
-    // ===== Title =====
-    doc.fontSize(30).fillColor("#2E86C1").text("Certificate of Achievement", {
-      align: "center",
-    });
+    doc
+      .fontSize(28)
+      .fillColor("#0a5275")
+      .font("Times-Bold")
+      .text("Certificate of Achievement", { align: "center" });
+
     doc.moveDown(2);
 
-    // ===== Appreciation Text =====
-    doc.fontSize(16).fillColor("black").text("This certificate is proudly presented to:", {
-      align: "center",
-    });
+    doc
+      .fontSize(16)
+      .fillColor("black")
+      .font("Times-Roman")
+      .text("This certificate is proudly presented to", { align: "center" });
+
     doc.moveDown(1);
 
-    // ===== Student Name =====
-    doc.fontSize(28).fillColor("#1B4F72").text(name, {
-      align: "center",
-      underline: true,
-    });
-    doc.moveDown(1.5);
+    doc
+      .fontSize(24)
+      .fillColor("#1a5276")
+      .font("Times-BoldItalic")
+      .text(studentName, { align: "center" });
 
-    // ===== Achievement Lines =====
-    doc.fontSize(16).fillColor("black").text(
-      `For successfully completing the "${quizName}" Quiz.`,
-      { align: "center" }
-    );
-    doc.moveDown(0.5);
-
-    doc.fontSize(16).text(
-      `You demonstrated hard work, focus, and dedication by scoring`,
-      { align: "center" }
-    );
-    doc.moveDown(0.3);
-
-    doc.fontSize(18).fillColor("#117A65").text(
-      `${obtainedMarks} out of ${maxMarks} marks`,
-      { align: "center", bold: true }
-    );
     doc.moveDown(1);
 
-    doc.fontSize(14).fillColor("black").text(
-      `"Your achievement is a reflection of your consistent effort and determination."`,
-      { align: "center", italic: true }
-    );
-    doc.moveDown(2);
+    doc
+      .fontSize(14)
+      .fillColor("black")
+      .text(`for completing the quiz "${quizName}" successfully.`, {
+        align: "center",
+      })
+      .moveDown(0.5)
+      .text(`Score: ${obtainedMarks} / ${totalMarks}`, { align: "center" })
+      .moveDown(1)
+      .text(
+        "Your dedication and effort are commendable. Keep learning and achieving!",
+        { align: "center", width: 500 }
+      );
 
-    // ===== Signature + Date =====
-    const issuedDate = new Date().toLocaleDateString();
-    doc.fontSize(14).fillColor("black").text(`Date: ${issuedDate}`, {
-      align: "left",
-    });
-    doc.fontSize(14).text("Authorized Signature: ____________________", {
-      align: "right",
-    });
+    doc.moveDown(3);
+
+    doc
+      .fontSize(12)
+      .text("_________________________", 100, 600, { align: "left" })
+      .text("Authorized Signature", 100, 620, { align: "left" });
+
+    doc
+      .text("_________________________", 350, 600, { align: "right" })
+      .text("Coordinator", 350, 620, { align: "right" });
 
     doc.end();
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error generating certificate" });
+  } catch (err) {
+    console.error("❌ Certificate generation failed:", err);
+    res.status(500).json({ error: "Certificate generation failed" });
   }
 });
 
