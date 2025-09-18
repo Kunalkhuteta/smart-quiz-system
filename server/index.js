@@ -11,9 +11,18 @@ const certificateRoutes = require("./routes/certificateRoutes");
 
 const app = express();
 // app.use("/api/leaderboard", require("./routes/leaderboardRoutes"));
+const cors = require("cors");
 
-// Middleware
-app.use(cors());    
+const allowedOrigins = [
+  "http://localhost:3000",                // when you test locally
+  "https://your-frontend.vercel.app"      // your deployed frontend on vercel
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+  
 app.use(express.json());
 
 app.use("/api/quiz", quizRoutes);
