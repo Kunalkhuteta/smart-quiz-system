@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 const quizRoutes = require("./routes/quizRoutes");
-const session = require("express-session");
-const passport = require("passport");
+// const session = require("express-session");
+// const passport = require("passport");
 const authRoutes = require("./routes/authRoutes");
 const referralRoutes = require("./routes/referralRoutes");
 const certificateRoutes = require("./routes/certificateRoutes");
@@ -13,7 +13,7 @@ const app = express();
 
 
 const allowedOrigins = [
-  "http://localhost:3000", 
+  // "http://localhost:3000", 
   "https://smart-quiz-system-uuqh.vercel.app", // 👈 your frontend
 ];
 
@@ -37,7 +37,7 @@ app.use(express.json());
 app.use("/api/quiz", quizRoutes);
 app.use("/api/chatbot", chatRoutes);
 
-app.use("/api", require("./routes/authRoutes"));
+// app.use("/api", require("./routes/authRoutes"));
 
 // Test Route
 app.get("/api/test", (req, res) => {
