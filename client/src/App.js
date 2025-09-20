@@ -10,6 +10,7 @@ import AttemptDetails from "./pages/AttemptDetails";
 import Leaderboard from "./pages/Leaderboard";
 import "./App.css"
 import AdminPanel from "./pages/AdminPanel";
+import Chatbot from "./components/Chatbot";
 
 
 function App() {
@@ -35,9 +36,12 @@ function App() {
 
 <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/admin" element={<AdminPanel />} />
-
+ 
 
       </Routes>
+     
+      <Chatbot />
+   
     </Router>
   );
 }

@@ -8,10 +8,9 @@ const passport = require("passport");
 const authRoutes = require("./routes/authRoutes");
 const referralRoutes = require("./routes/referralRoutes");
 const certificateRoutes = require("./routes/certificateRoutes");
-
+const chatRoutes = require("./routes/chatRoutes");
 const app = express();
-// app.use("/api/leaderboard", require("./routes/leaderboardRoutes"));
-const cors = require("cors");
+
 
 const allowedOrigins = [
   "http://localhost:3000",                // when you test locally
@@ -26,6 +25,7 @@ app.use(cors({
 app.use(express.json());
 
 app.use("/api/quiz", quizRoutes);
+app.use("/api/chatbot", chatRoutes);
 
 app.use("/api", require("./routes/authRoutes"));
 
