@@ -14,7 +14,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:3000",                // when you test locally
-  "https://smart-quiz-system-uuqh-18b387uox-kunal-khutetas-projects.vercel.app/"      // your deployed frontend on vercel
+  "https://smart-quiz-system-uuqh.vercel.app/"      // your deployed frontend on vercel
 ];
 
 app.use(cors({

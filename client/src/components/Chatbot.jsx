@@ -16,7 +16,7 @@ export default function Chatbot() {
     setMessages((prev) => [...prev, { from: "user", text: message }]);
 
     try {
-      const res = await fetch("http://localhost:5000/api/chatbot/chat", {
+      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/chatbot/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),
