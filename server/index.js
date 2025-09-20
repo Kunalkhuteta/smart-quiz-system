@@ -13,9 +13,11 @@ const app = express();
 
 
 const allowedOrigins = [
-  // "http://localhost:3000", 
-  "https://smart-quiz-system-uuqh.vercel.app", // 👈 your frontend
+  "http://localhost:3000",
+  "https://smart-quiz-system-uuqh.vercel.app", 
+  "https://smart-quiz-system-uuqh-1gzketfmw-kunal-khutetas-projects.vercel.app", // 👈 add this new one
 ];
+
 
 app.use(cors({
   origin: function(origin, callback) {
