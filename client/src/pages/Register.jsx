@@ -34,7 +34,7 @@ const Register = () => {
     
     console.log("this is the referrel by", referredBy)
     const res = await axios.post(
-      `${process.env.REACT_APP_API_BASE_URL}/api/auth/register`,
+      `${process.env.REACT_APP_API_BASE_URL}/api/register`,
       {
         ...user,
         role,
