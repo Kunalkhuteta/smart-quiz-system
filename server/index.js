@@ -9,6 +9,7 @@ const authRoutes = require("./routes/authRoutes");
 const referralRoutes = require("./routes/referralRoutes");
 const certificateRoutes = require("./routes/certificateRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+
 const app = express();
 
 
