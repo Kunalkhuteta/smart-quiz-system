@@ -12,7 +12,6 @@ export default function Chatbot() {
   const sendMessage = async (message) => {
     if (!message) return;
 
-    // Add user's message to chat
     setMessages((prev) => [...prev, { from: "user", text: message }]);
 
     try {
@@ -24,7 +23,6 @@ export default function Chatbot() {
 
       const data = await res.json();
 
-      // Add bot reply
       setMessages((prev) => [
         ...prev,
         { from: "bot", text: data.reply || "Sorry, I cannot answer that." },
@@ -38,12 +36,12 @@ export default function Chatbot() {
     }
   };
 
-  // Handle input enter
   const handleKeyPress = (e) => {
     if (e.key === "Enter") handleSend();
   };
 
   const handleSend = () => {
+    if (!input.trim()) return;
     sendMessage(input);
     setInput("");
   };
@@ -52,6 +50,10 @@ export default function Chatbot() {
     <div className="chatbot-wrapper">
       {open && (
         <div className="chat-window">
+          <div className="chat-header">
+            <span>AI Chatbot</span>
+            <button className="close-btn" onClick={() => setOpen(false)}>×</button>
+          </div>
           <div className="chat-messages">
             {messages.map((m, i) => (
               <div
@@ -74,7 +76,7 @@ export default function Chatbot() {
         </div>
       )}
       <button className="chatbot-icon" onClick={() => setOpen(!open)}>
-        💬
+        🤖
       </button>
     </div>
   );
