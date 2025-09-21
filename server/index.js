@@ -69,7 +69,7 @@ app.get("/api/quiz/attempts/:id", async (req, res) => {
 
 app.use("/api/referrals", referralRoutes);
 
-app.use("/api/auth", authRoutes);
+app.use("/api", authRoutes);
 app.use("/api/certificates", certificateRoutes);
 
 mongoose
@@ -84,4 +84,4 @@ mongoose
 // app.listen(process.env.PORT || 5000, () => {
 //   console.log("Server running without DB");
 // });
-
+ 
