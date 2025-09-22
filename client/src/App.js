@@ -34,8 +34,8 @@ function App() {
 <Route path="/attempts" element={<Attempts />} />
  <Route path="/attempts/:id" element={<AttemptDetails />} />
 
-<Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/admin" element={<AdminPanel />} />
+<Route path="/leaderboard" element={<Leaderboard />} />
  
 
       </Routes>

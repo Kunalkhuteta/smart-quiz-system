@@ -44,8 +44,7 @@
   25%, 75% { border-color: #fff; }
 }
 
-
-/* User Info Card */
+/* ===== User Info Card ===== */
 .user-info-card {
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(6px);
@@ -64,7 +63,7 @@
   margin: 6px 0;
 }
 
-/* Navigation Buttons */
+/* ===== Navigation Buttons ===== */
 .button-group {
   display: flex;
   justify-content: center;
@@ -89,7 +88,7 @@
   box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
-/* Quiz Section */
+/* ===== Quiz Section ===== */
 .quiz-section {
   backdrop-filter: blur(6px);
   border-radius: 15px;
@@ -136,4 +135,76 @@
 .quiz-card label:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ===== Responsive Styles ===== */
+@media (max-width: 640px) {
+  /* Shrink dashboard title */
+  .dashboard-title {
+    font-size: 2rem;
+    display: block;
+    text-align: center;
+    border-right: 3px solid #fff;
+    width: 100%;
+  }
+
+  /* Top buttons move below title */
+  .flex.flex-col.sm\:flex-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px;
+  }
+
+  .flex.gap-3.items-center.flex-wrap {
+    justify-content: center !important;
+    gap: 10px !important;
+  }
+
+  /* Adjust button padding and font */
+  .button-group .themed-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  /* Reduce user card padding */
+  .user-info-card {
+    padding: 15px;
+  }
+
+  /* Reduce quiz card padding */
+  .quiz-card {
+    padding: 12px;
+  }
+
+  /* Shrink quiz title */
+  .quiz-title {
+    font-size: 1.5rem;
+  }
+}
+/* ===== Tech Stack Marquee ===== */
+.tech-marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.tech-track {
+  display: inline-block;
+  animation: scrollIcons 18s linear infinite;
+}
+
+.tech-track span {
+  display: inline-block;
+  margin: 0 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* Looping animation */
+@keyframes scrollIcons {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
 }

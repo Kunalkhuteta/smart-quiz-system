@@ -1,75 +1,141 @@
-.attempt-details-container {
+/* ===== Dark Moving Gradient Background ===== */
+.admin-bg {
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #111827, #0a0f1f);
+  background-size: 400% 400%;
+  animation: gradientMove 25s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Card */
+.admin-card {
   max-width: 800px;
-  margin: 40px auto;
+  margin: 0 auto;
   padding: 30px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', sans-serif;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  background: rgba(15, 23, 42, 0.85);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
 }
 
-.attempt-details-container h2 {
+.admin-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+}
+
+/* Heading with blue gradient */
+.admin-card h2 {
   text-align: center;
-  font-size: 28px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #3b82f6, #0ea5e9, #22d3ee); /* blue gradient */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 20px;
-  color: #333;
+  animation: pulse 1.5s infinite;
 }
 
-.attempt-details-container p {
-  font-size: 16px;
-  margin: 5px 0 15px;
-  color: #444;
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.85; }
 }
 
-.question-list {
-  list-style-type: none;
+/* Attempt Info */
+.attempt-info {
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+  background: rgba(30, 41, 59, 0.75);
+  border-left: 5px solid #3b82f6; /* blue border */
+  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.attempt-info:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.5);
+}
+
+/* Answers */
+.answers-list {
+  list-style: none;
   padding: 0;
   margin-top: 20px;
 }
 
-.question-item {
-  padding: 18px 20px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  background-color: #f7f7f7;
+.answer-item {
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(8px);
+  background: rgba(30,41,59,0.65);
   border-left: 6px solid #bbb;
-  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-  opacity: 0;
-  animation: fadeIn 0.6s ease forwards;
+  position: relative;
 }
 
-.question-item:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+.answer-item.correct::after,
+.answer-item.wrong::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  box-shadow: 0 0 15px 3px transparent;
+  transition: box-shadow 0.3s ease;
 }
 
-
-.question-item.correct {
-  border-left-color: #4caf50;
-  background-color: #e8f5e9;
+.answer-item.correct:hover::after {
+  box-shadow: 0 0 25px 4px #4ade80;
 }
 
-.question-item.wrong {
-  border-left-color: #f44336;
-  background-color: #fdecea;
+.answer-item.wrong:hover::after {
+  box-shadow: 0 0 25px 4px #f87171;
 }
 
-.question-item p {
-  margin: 8px 0;
-  color: #333;
+.answer-item.correct {
+  border-left-color: #4ade80;
+  background: rgba(74, 222, 128, 0.2);
 }
 
-.label {
-  font-weight: bold;
-  color: #555;
+.answer-item.wrong {
+  border-left-color: #f87171;
+  background: rgba(248, 113, 113, 0.2);
 }
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
+
+.answer-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+}
+
+/* Back button */
+.admin-back-btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Responsive Mobile Styles */
+@media (max-width: 640px) {
+  .admin-card {
+    padding: 20px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .admin-card h2 {
+    font-size: 1.8rem;
+  }
+  .attempt-info {
+    padding: 15px;
+  }
+  .answer-item {
+    padding: 12px 15px;
+  }
+  .answers-list {
+    gap: 10px;
   }
 }
