@@ -1,53 +1,95 @@
-.attempts-container {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 25px 30px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', sans-serif;
+/* ===== Moving Gradient Background ===== */
+.moving-bg {
+  background-size: 300% 300%;
+  animation: gradientMove 20s linear infinite;
 }
 
-.attempts-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 26px;
-  color: #333;
+.dark-mode-bg {
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #111827, #0a0f1f);
 }
 
-.no-attempts {
-  text-align: center;
-  font-size: 18px;
-  color: #777;
+.light-mode-bg {
+  background: linear-gradient(-45deg, #f3f4f6, #e5e7eb, #d1d5db, #f9fafb);
 }
 
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 100%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+/* ===== Animated Heading ===== */
+.attempts-heading {
+  background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #5f27cd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 300% 300%;
+  animation: textGradientMove 6s ease infinite;
+}
+
+@keyframes textGradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ===== Attempts List ===== */
 .attempts-list {
   list-style-type: none;
   padding: 0;
 }
 
+/* Quiz Attempt Card */
 .attempt-item {
-  padding: 18px 20px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  background-color: #f0f0f0;
-  border-left: 6px solid #2196f3;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-  opacity: 0;
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
-.attempt-item:hover {
-  transform: translateY(-4px);
-  background-color: #e3f2fd;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+/* Light Mode Card */
+.attempt-item.light-mode {
+  background: linear-gradient(135deg, #ffffff, #f9fafb);
+  border: 1px solid #e5e7eb;
 }
 
+.attempt-item.light-mode:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+}
+
+/* Dark Mode Card */
+.attempt-item.dark-mode {
+  background: linear-gradient(135deg, #1f2937, #111827);
+  border: 1px solid #374151;
+  color: #e5e7eb;
+}
+
+.attempt-item.dark-mode:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+/* Fade-in animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(15px);
   }
   to {
     opacity: 1;
@@ -55,24 +97,36 @@
   }
 }
 
-
+/* Text inside cards - subtle enhancement */
 .attempt-item p {
   margin: 5px 0;
-  color: #444;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
+.attempt-item .text-green-400,
+.attempt-item .text-red-400 {
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Button Enhancement - simple and elegant */
 .attempt-item button {
   margin-top: 10px;
-  padding: 8px 16px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+  padding: 10px 18px;
+  background: linear-gradient(90deg, #4ade80, #22d3ee);
+  color: #fff;
+  font-weight: 600;
   font-size: 14px;
-  transition: background-color 0.3s ease;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .attempt-item button:hover {
-  background-color: #388e3c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  background: linear-gradient(90deg, #22d3ee, #4ade80);
 }

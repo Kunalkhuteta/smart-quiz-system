@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext"; // optional theme context
-import ThemeToggle from "../components/ThemeToggle"; // MUI switch toggle
+import { useTheme } from "../context/ThemeContext";
+import ThemeToggle from "../components/ThemeToggle";
+import "../styles/Register.css";
 
 const Register = () => {
-  const { mode } = useTheme(); // dark/light mode
+  const { mode } = useTheme();
   const [user, setUser] = useState({ name: "", email: "", password: "" });
   const [role, setRole] = useState("");
   const [referredBy, setReferredBy] = useState("");
@@ -26,14 +27,11 @@ const Register = () => {
     setMsg("");
 
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/api/register`,
-        {
-          ...user,
-          role,
-          referralId: role === "student" ? referredBy : null,
-        }
-      );
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/register`, {
+        ...user,
+        role,
+        referralId: role === "student" ? referredBy : null,
+      });
       setMsg(res.data.message || "✅ Registered successfully");
       setUser({ name: "", email: "", password: "" });
       setRole("");
@@ -46,22 +44,15 @@ const Register = () => {
   };
 
   return (
-    <div
-      className={`min-h-screen flex flex-col items-center justify-center p-4 ${
-        mode === "dark" ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900"
-      }`}
-    >
-      {/* Theme Toggle Switch */}
-      <div className="self-end mb-4">
+    <div className={`register-page ${mode === "dark" ? "dark" : "light"}`}>
+      {/* <div className="theme-toggle-wrapper">
         <ThemeToggle />
-      </div>
+      </div> */}
 
-      <div className={`w-full max-w-md p-8 rounded-xl shadow-lg ${
-        mode === "dark" ? "bg-gray-800" : "bg-gray-100"
-      }`}>
-        <h2 className="text-2xl font-bold mb-6 text-center">🔐 Register</h2>
+      <div className="register-card">
+        <h2 className="register-title">Sign Up</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="register-form">
           <input
             type="text"
             name="name"
@@ -69,11 +60,8 @@ const Register = () => {
             value={user.name}
             onChange={handleChange}
             required
-            className={`w-full p-3 rounded border focus:outline-none focus:ring-2 ${
-              mode === "dark" ? "bg-gray-700 text-gray-100 border-gray-600 focus:ring-blue-500" : "bg-gray-200 text-gray-900 border-gray-300 focus:ring-blue-400"
-            }`}
+            className="register-input"
           />
-
           <input
             type="email"
             name="email"
@@ -81,11 +69,8 @@ const Register = () => {
             value={user.email}
             onChange={handleChange}
             required
-            className={`w-full p-3 rounded border focus:outline-none focus:ring-2 ${
-              mode === "dark" ? "bg-gray-700 text-gray-100 border-gray-600 focus:ring-blue-500" : "bg-gray-200 text-gray-900 border-gray-300 focus:ring-blue-400"
-            }`}
+            className="register-input"
           />
-
           <input
             type="password"
             name="password"
@@ -93,19 +78,10 @@ const Register = () => {
             value={user.password}
             onChange={handleChange}
             required
-            className={`w-full p-3 rounded border focus:outline-none focus:ring-2 ${
-              mode === "dark" ? "bg-gray-700 text-gray-100 border-gray-600 focus:ring-blue-500" : "bg-gray-200 text-gray-900 border-gray-300 focus:ring-blue-400"
-            }`}
+            className="register-input"
           />
 
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            required
-            className={`w-full p-3 rounded border focus:outline-none focus:ring-2 ${
-              mode === "dark" ? "bg-gray-700 text-gray-100 border-gray-600 focus:ring-blue-500" : "bg-gray-200 text-gray-900 border-gray-300 focus:ring-blue-400"
-            }`}
-          >
+          <select value={role} onChange={(e) => setRole(e.target.value)} required className="register-input">
             <option value="">Select Role</option>
             <option value="teacher">Teacher</option>
             <option value="student">Student</option>
@@ -114,39 +90,34 @@ const Register = () => {
           {role === "student" && (
             <input
               type="text"
-              placeholder="Enter referral ID from your teacher"
+              placeholder="Referral ID from your teacher"
               value={referredBy}
               onChange={(e) => setReferredBy(e.target.value)}
               required
-              className={`w-full p-3 rounded border focus:outline-none focus:ring-2 ${
-                mode === "dark" ? "bg-gray-700 text-gray-100 border-gray-600 focus:ring-blue-500" : "bg-gray-200 text-gray-900 border-gray-300 focus:ring-blue-400"
-              }`}
+              className="register-input"
             />
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 rounded text-white font-semibold shadow transition ${
-              loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-500"
-            }`}
+            className={`w-full py-3 rounded-lg text-white font-semibold shadow-md transform transition hover:scale-105 ${loading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500"
+              }`}
           >
-            {loading ? "Registering..." : "Sign Up"}
+            {loading ? "Registering" : "Sign Up"}
           </button>
         </form>
 
-        {msg && (
-          <p className={`mt-4 text-center font-semibold ${msg.includes("✅") ? "text-green-400" : "text-red-400"}`}>
-            {msg}
-          </p>
-        )}
+        {msg && <p className={`register-msg ${msg.includes("✅") ? "success" : "error"}`}>{msg}</p>}
 
-        <div className="mt-6 text-center">
-          <span className={`mr-2 ${mode === "dark" ? "text-gray-300" : "text-gray-700"}`}>Already registered?</span>
-          <button
-            onClick={() => navigate("/login")}
-            className="px-3 py-1 bg-green-600 hover:bg-green-500 rounded text-white font-semibold"
-          >
+        <div className="register-footer">
+          <span
+            className={`mr-2 ${mode === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}
+          > Already registered?</span>
+          <button onClick={() => navigate("/login")} className="register-login-btn">
             Login
           </button>
         </div>

@@ -1,45 +1,170 @@
+/* 🌌 Animated Dark Gradient Background */
+.leaderboard-bg {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e1e2f, #111827, #1f2937, #111827);
+  background-size: 400% 400%;
+  animation: backgroundShift 20s linear infinite;
+}
+
+/* 🔄 Background shifting animation */
+@keyframes backgroundShift {
+  0%   { background-position: 100% 100%; }
+  50%  { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+/* Floating blur orbs */
+.leaderboard-bg::before,
+.leaderboard-bg::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.4;
+  animation: float 15s infinite ease-in-out alternate;
+  z-index: 0;
+}
+
+.leaderboard-bg::before {
+  width: 400px;
+  height: 400px;
+  background: #4338ca;
+  top: -150px;
+  left: -120px;
+}
+
+.leaderboard-bg::after {
+  width: 500px;
+  height: 500px;
+  background: #9333ea;
+  bottom: -200px;
+  right: -150px;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+  50% { transform: translateY(40px) translateX(30px) rotate(45deg); }
+  100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+}
+
+/* 🏆 Leaderboard Card */
 .leaderboard-container {
-  max-width: 800px;
+  position: relative;
+  z-index: 10;
+  max-width: 900px;
   margin: 40px auto;
-  padding: 25px 30px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 30px 35px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
   font-family: 'Segoe UI', sans-serif;
+  color: #fff;
 }
 
 .leaderboard-container h2 {
   text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 28px;
+  margin-bottom: 25px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(
+    270deg,
+    #facc15,
+    #f472b6,
+    #9333ea,
+    #22d3ee,
+    #facc15
+  );
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientFlow 8s ease infinite, glowPulse 2s ease-in-out infinite;
 }
 
+/* 🔮 Gradient Flow Animation */
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ✨ Subtle Glow Effect */
+@keyframes glowPulse {
+  0%, 100% {
+    text-shadow: 0 0 8px rgba(250, 204, 21, 0.6),
+                 0 0 12px rgba(244, 114, 182, 0.6),
+                 0 0 18px rgba(147, 51, 234, 0.6);
+  }
+  50% {
+    text-shadow: 0 0 16px rgba(250, 204, 21, 0.9),
+                 0 0 24px rgba(244, 114, 182, 0.9),
+                 0 0 32px rgba(147, 51, 234, 0.9);
+  }
+}
+
+/* 📊 Table */
 .leaderboard-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 16px;
 }
 
-.leaderboard-table thead {
-  background-color: #f5f5f5;
-}
-
 .leaderboard-table th,
 .leaderboard-table td {
-  text-align: center;
   padding: 12px 10px;
-  border-bottom: 1px solid #ddd;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.leaderboard-table thead th {
+  color: #ccc;
+  font-weight: 700;
 }
 
 .leaderboard-table tbody tr:hover {
-  background-color: #f9f9f9;
+  background: rgba(255, 255, 255, 0.05);
+  transform: scale(1.02);
+  transition: all 0.3s ease-in-out;
 }
 
-.leaderboard-table th {
-  color: #555;
+/* 🥇🥈🥉 Animated Text for Top 3 Ranks */
+.rank-1 {
+  font-weight: bold;
+  display: inline-block;
+  background: linear-gradient(90deg, #b58900, #ffdf00, #fff700);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pulseGold 2s infinite;
 }
 
-.leaderboard-table td {
-  color: #333;
+.rank-2 {
+  font-weight: bold;
+  display: inline-block;
+  background: linear-gradient(90deg, #7f8c8d, #bdc3c7, #ecf0f1);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pulseSilver 2s infinite;
 }
+
+.rank-3 {
+  font-weight: bold;
+  display: inline-block;
+  background: linear-gradient(90deg, #8b4000, #cd7f32, #ffa500);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pulseBronze 2s infinite;
+}
+
+@keyframes pulseGold { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@keyframes pulseSilver { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@keyframes pulseBronze { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+/* 🌑 Dark Mode Row Highlight for Top 3 */
+.dark-rank-1 { background: linear-gradient(90deg, rgba(255, 217, 0, 0.897), rgba(255, 217, 0, 0.089)); box-shadow: 0 0 15px rgb(187,160,9); }
+.dark-rank-2 { background: linear-gradient(90deg, rgba(192, 192, 192, 0.877), rgba(192,192,192,0.15)); box-shadow: 0 0 12px rgba(192,192,192,0.589); }
+.dark-rank-3 { background: linear-gradient(90deg, rgba(205, 128, 50, 0.938), rgba(205,127,50,0.15)); box-shadow: 0 0 12px rgba(205,128,50,0.801); }
