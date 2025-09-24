@@ -60,7 +60,6 @@ const AttemptDetails = () => {
           mode === "dark" ? "text-gray-100" : "text-gray-900"
         }`}
       >
-        {/* Theme toggle */}
         <div className="flex justify-end mb-4">
           <ThemeToggle />
         </div>
@@ -70,7 +69,6 @@ const AttemptDetails = () => {
             <Skeleton variant="text" width={200} height={40} animation="wave" />
           </h2>
 
-          {/* Attempt Info Skeleton */}
           <Skeleton
             variant="rectangular"
             height={80}
@@ -78,7 +76,6 @@ const AttemptDetails = () => {
             style={{ borderRadius: "10px", marginBottom: "16px" }}
           />
 
-          {/* Answer Skeletons */}
           {[...Array(5)].map((_, i) => (
             <Skeleton
               key={i}
@@ -89,7 +86,6 @@ const AttemptDetails = () => {
             />
           ))}
 
-          {/* Back Button Skeleton */}
           <div className="admin-back-btn mt-4">
             <Skeleton
               variant="rectangular"
@@ -110,7 +106,6 @@ const AttemptDetails = () => {
         mode === "dark" ? "text-gray-100" : "text-gray-900"
       }`}
     >
-      {/* Theme toggle */}
       <div className="flex justify-end mb-4">
         <ThemeToggle />
       </div>
@@ -118,8 +113,7 @@ const AttemptDetails = () => {
       <div className="admin-card">
         <h2>📋 Attempt Details</h2>
 
-        {/* Attempt Info */}
-        <div className="attempt-info">
+        <div className="attempt-info mb-4">
           <p>
             <strong>🧑 Username:</strong> {attempt.username}
           </p>
@@ -132,10 +126,9 @@ const AttemptDetails = () => {
           </p>
         </div>
 
-        {/* Answers Section */}
         <ul className="answers-list">
           {attempt.answers.map((ans, idx) => {
-            const isCorrect = ans.selected === ans.correct;
+            const isCorrect = ans.isCorrect;
             return (
               <li
                 key={idx}
@@ -144,20 +137,20 @@ const AttemptDetails = () => {
                 <p className="font-semibold mb-1">
                   Q{idx + 1}: {ans.question}
                 </p>
-                <p className="text-sm mb-0.5">
-                  <strong>Your Answer:</strong>{" "}
-                  {ans.selected || "Not answered"}
+                <p className={`text-sm mb-0.5 ${isCorrect ? "text-green-500" : "text-red-500"}`}>
+                  <strong>Your Answer:</strong> {ans.selected || "Not answered"} {isCorrect ? "✅" : "❌"}
                 </p>
-                <p className="text-sm">
-                  <strong>Correct Answer:</strong> {ans.correct}
-                </p>
+                {!isCorrect && (
+                  <p className="text-blue-500 text-sm">
+                    <strong>Correct Answer:</strong> {ans.correct}
+                  </p>
+                )}
               </li>
             );
           })}
         </ul>
 
-        {/* Back Button */}
-        <div className="admin-back-btn">
+        <div className="admin-back-btn mt-4">
           <ThemedButton onClick={() => window.history.back()} variant="default">
             🔙 Back
           </ThemedButton>

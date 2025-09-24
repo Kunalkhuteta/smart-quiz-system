@@ -5,27 +5,38 @@ import ThemeToggle from "../components/ThemeToggle";
 import { useTheme } from "../context/ThemeContext";
 import ThemedButton from "../components/ThemedButton";
 import "../styles/Attempts.css";
+import { useLocation } from "react-router-dom";
 
 const Attempts = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
   const [attempts, setAttempts] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation(); // ✅
   const { mode } = useTheme();
 
-  useEffect(() => {
-    const fetchAttempts = async () => {
-      try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/api/quiz/attempts/?userId=${user.id}`
-        );
-        setAttempts(res.data.attempts);
-      } catch (err) {
-        console.error("Failed to fetch attempts:", err);
-      }
-    };
+  const fetchAttempts = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_BASE_URL}/api/quiz/attempts`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setAttempts(res.data.attempts);
+    } catch (err) {
+      console.error("Failed to fetch attempts:", err.response?.data || err.message);
+    }
+  };
 
+  useEffect(() => {
     fetchAttempts();
-  }, [user.id]);
+  }, []);
+
+  // 🔹 Refetch whenever navigated from quiz submission
+  useEffect(() => {
+    if (location.state?.refresh) {
+      fetchAttempts();
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location]);
 
   return (
     <div
@@ -57,14 +68,12 @@ const Attempts = () => {
         ) : (
           <ul className="space-y-6 attempts-list">
             {attempts.map((attempt, index) => {
-              const correct = attempt.answers.filter(
-                (q) => q.selected === q.correct
-              ).length;
-              const wrong = attempt.total - correct;
+              const correct = attempt.answers.filter((q) => q.isCorrect).length;
+              const wrong = attempt.answers.length - correct;
 
               return (
                 <li
-                  key={index}
+                  key={attempt._id} // ✅ use unique _id
                   className={`attempt-item ${
                     mode === "dark" ? "dark-mode" : "light-mode"
                   }`}
@@ -77,10 +86,12 @@ const Attempts = () => {
                       </span>
                     </p>
                     <p className="text-sm opacity-70">
-                      {new Date(attempt.submittedAt).toLocaleString()}
+                      {attempt.submittedAt
+                        ? new Date(attempt.submittedAt).toLocaleString()
+                        : "Date not available"}
                     </p>
                   </div>
-                  <div className="flex gap-6 text-md">
+                  <div className="flex gap-6 text-md mt-1">
                     <p className="text-green-400 font-semibold">
                       🟢 Correct: {correct}
                     </p>
@@ -88,7 +99,7 @@ const Attempts = () => {
                       🔴 Wrong: {wrong}
                     </p>
                   </div>
-                  <div>
+                  <div className="mt-2">
                     <ThemedButton
                       onClick={() => navigate(`/attempts/${attempt._id}`)}
                       variant="generate"

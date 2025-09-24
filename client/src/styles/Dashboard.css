@@ -208,3 +208,77 @@
   0% { transform: translateX(100%); }
   100% { transform: translateX(-100%); }
 }
+/* Quiz cards */
+.quiz-card {
+  background: linear-gradient(135deg, #1f1f1f, #2c2c2c); /* Dark gradient */
+  color: #f5f5f5; /* Light text */
+  padding: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.quiz-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+}
+
+/* Optional glowing hover overlay */
+.quiz-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.1), rgba(0,0,0,0));
+  transform: rotate(25deg);
+  transition: all 0.5s ease;
+}
+
+.quiz-card:hover::before {
+  top: -20%;
+  left: -20%;
+}
+
+/* Quiz title */
+.quiz-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #ffffff; /* Bright white for maximum contrast */
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.8); /* subtle glow for readability */
+  transition: all 0.3s ease;
+}
+
+.quiz-card:hover .quiz-title {
+  color: #ffd700; /* Gold highlight on hover */
+  text-shadow: 2px 2px 10px rgba(255,215,0,0.7);
+}
+
+
+/* Quiz info */
+.quiz-info {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  color: #d0d0d0;
+}
+
+/* Buttons inside quiz card */
+.quiz-card .ThemedButton {
+  flex: 1;
+  min-width: 120px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  background: linear-gradient(90deg, #444, #666); /* Dark gradient button */
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.quiz-card .ThemedButton:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #666, #888);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+}

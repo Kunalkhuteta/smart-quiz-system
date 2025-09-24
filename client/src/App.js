@@ -11,7 +11,8 @@ import Leaderboard from "./pages/Leaderboard";
 import "./App.css"
 import AdminPanel from "./pages/AdminPanel";
 import Chatbot from "./components/Chatbot";
-
+import CreateQuiz from "./pages/CreateQuiz";
+import AttemptQuiz from "./pages/AttemptQuiz";
 
 function App() {
   return (
@@ -36,7 +37,9 @@ function App() {
 
           <Route path="/admin" element={<AdminPanel />} />
 <Route path="/leaderboard" element={<Leaderboard />} />
- 
+ <Route path="/create-quiz" element={<CreateQuiz />} />
+ <Route path="/edit-quiz/:quizId" element={<CreateQuiz />} /> {/* Edit Quiz */}
+ <Route path="/attempt-quiz/:quizId" element={<AttemptQuiz />} />
 
       </Routes>
      
