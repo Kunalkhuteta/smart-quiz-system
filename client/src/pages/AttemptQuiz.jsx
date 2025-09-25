@@ -3,7 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ThemedButton from "../components/ThemedButton";
 import { useTheme } from "../context/ThemeContext";
-import "../styles/AttemptQuiz.css"; // ✅ Add this CSS file
+import "../styles/AttemptQuiz.css";
+
+const API_BASE = process.env.REACT_APP_API_BASE_URL || "https://smart-quiz-system.onrender.com";
 
 const AttemptQuiz = () => {
   const { mode } = useTheme();
@@ -14,17 +16,19 @@ const AttemptQuiz = () => {
   const [loading, setLoading] = useState(true);
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`/api/quiz/${quizId}`, {
+        const res = await axios.get(`${API_BASE}/api/quiz/${quizId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setQuiz(res.data);
       } catch (err) {
         console.error("Error fetching quiz:", err.response?.data || err.message);
+        setError("⚠️ Failed to load quiz. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -57,7 +61,7 @@ const AttemptQuiz = () => {
       const totalWrong = answersArray.length - totalCorrect;
 
       await axios.post(
-        "/api/quiz/attempt/submit",
+        `${API_BASE}/api/quiz/attempt/submit`,
         { quizId: quiz._id, answers: answersArray },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -69,37 +73,50 @@ const AttemptQuiz = () => {
       navigate("/attempts");
     } catch (err) {
       console.error("Submit attempt error:", err.response?.data || err.message);
-      alert("Error submitting quiz.");
+      alert("⚠️ Error submitting quiz.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  if (loading) return <p className="text-center mt-4">Loading quiz...</p>;
-  if (!quiz) return <p className="text-center mt-4">Quiz not found.</p>;
+  if (loading) return <p className="text-center mt-4">⏳ Loading quiz...</p>;
+  if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
+  if (!quiz) return <p className="text-center mt-4">❌ Quiz not found.</p>;
 
   return (
-    <div className={`attempt-quiz-page min-h-screen p-4 sm:p-6 ${mode === "dark" ? "dark-mode-bg text-gray-100" : "light-mode-bg text-gray-900"}`}>
+    <div
+      className={`attempt-quiz-page min-h-screen p-4 sm:p-6 ${
+        mode === "dark"
+          ? "dark-mode-bg text-gray-100"
+          : "light-mode-bg text-gray-900"
+      }`}
+    >
       <h1 className="quiz-title mb-6">{quiz.title}</h1>
 
-      {quiz.questions.map((q, idx) => (
-        <div key={idx} className="question-card">
-          <p className="question-text mb-3">{idx + 1}. {q.question}</p>
-          {q.options.map((opt, oidx) => (
-            <label key={oidx} className="option-label">
-              <input
-                type="radio"
-                name={`question-${idx}`}
-                value={opt}
-                checked={answers[idx] === opt}
-                onChange={() => handleOptionChange(idx, opt)}
-                className="option-input"
-              />
-              {opt}
-            </label>
-          ))}
-        </div>
-      ))}
+      {quiz.questions?.length > 0 ? (
+        quiz.questions.map((q, idx) => (
+          <div key={idx} className="question-card">
+            <p className="question-text mb-3">
+              {idx + 1}. {q.question}
+            </p>
+            {q.options.map((opt, oidx) => (
+              <label key={oidx} className="option-label">
+                <input
+                  type="radio"
+                  name={`question-${idx}`}
+                  value={opt}
+                  checked={answers[idx] === opt}
+                  onChange={() => handleOptionChange(idx, opt)}
+                  className="option-input"
+                />
+                {opt}
+              </label>
+            ))}
+          </div>
+        ))
+      ) : (
+        <p>No questions found in this quiz.</p>
+      )}
 
       <div className="submit-button-wrapper mt-6">
         <ThemedButton onClick={handleSubmit} disabled={submitting}>

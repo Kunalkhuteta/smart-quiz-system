@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+const API_BASE =  process.env.REACT_APP_API_BASE_URL || "https://smart-quiz-system.onrender.com";
 
 const CreateQuiz = () => {
   const { quizId } = useParams(); // For editing mode
@@ -19,7 +20,7 @@ const CreateQuiz = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`/api/quiz/${quizId}`, {
+        const res = await axios.get(`${API_BASE}/api/quiz/${quizId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const quiz = res.data;
@@ -75,13 +76,13 @@ const CreateQuiz = () => {
 
       if (quizId) {
         // Edit existing quiz
-        await axios.put(`/api/quiz/${quizId}`, payload, {
+        await axios.put(`${API_BASE}/api/quiz/${quizId}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert("✅ Quiz updated successfully!");
       } else {
         // Create new quiz
-        await axios.post("/api/quiz/create", payload, {
+        await axios.post(`${API_BASE}/api/quiz/create`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
         alert("✅ Quiz created successfully!");
@@ -95,7 +96,7 @@ const CreateQuiz = () => {
   };
 
   if (loading) return <p>Loading quiz...</p>;
-    
+
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
       <h1 className="text-3xl font-bold text-center mb-6">

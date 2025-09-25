@@ -7,7 +7,33 @@ import ThemeToggle from "../components/ThemeToggle";
 import ThemedButton from "../components/ThemedButton";
 import "../styles/Dashboard.css";
 
-const API_BASE =  "https://smart-quiz-system.onrender.com";
+// ✅ Imported icons
+import html from "../images/html.png";
+import css from "../images/css.png";
+import js from "../images/js.png";
+import MongoDB from "../images/mongodb.png";
+import Express from "../images/express.png";
+import react from "../images/react.png";
+import nodejs from "../images/nodejs.png";
+import github from "../images/github.png";
+import googleAuth from "../images/googleauth.png";
+import googlecloud from "../images/googlecloud.png";
+import hf from "../images/hugginface.png";
+import json from "../images/json.png";
+import api from "../images/api.png";
+import jwt from "../images/jwt.png";
+import mui from "../images/mui.png";
+import notion from "../images/notion.png";
+import npm from "../images/npm.png";
+import postman from "../images/postman.png";
+import vite from "../images/vite.png";
+import vercel from "../images/vercel.png";
+import tailwind from "../images/tailwind.png";
+import render from "../images/render.png";
+import eraser from "../images/eraser.png";
+
+const API_BASE =
+  process.env.REACT_APP_API_BASE_URL || "https://smart-quiz-system.onrender.com";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -69,6 +95,33 @@ const Dashboard = () => {
       console.error("Error deleting quiz:", err.response?.data || err.message);
     }
   };
+
+  // ✅ Use imported images instead of string paths
+  const techIcons = [
+    { src: html, alt: "HTML" },
+    { src: css, alt: "CSS" },
+    { src: js, alt: "JavaScript" },
+    { src: MongoDB, alt: "MongoDB" },
+    { src: Express, alt: "Express" },
+    { src: react, alt: "React" },
+    { src: nodejs, alt: "NodeJS" },
+    { src: tailwind, alt: "Tailwind" },
+    { src: mui, alt: "Material UI" },
+    { src: github, alt: "GitHub" },
+    { src: postman, alt: "Postman" },
+    { src: npm, alt: "NPM" },
+    { src: vercel, alt: "Vercel" },
+    { src: render, alt: "Render" },
+    { src: eraser, alt: "Eraser" },
+    { src: googlecloud, alt: "Google Cloud" },
+    { src: googleAuth, alt: "Google Auth" },
+    { src: notion, alt: "Notion" },
+    { src: hf, alt: "Hugging Face" },
+    { src: json, alt: "JSON" },
+    { src: api, alt: "API" },
+    { src: jwt, alt: "JWT" },
+    { src: vite, alt: "Vite" },
+  ];
 
   return (
     <div
@@ -133,39 +186,15 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Tech Stack Marquee */}
+      {/* ✅ Tech Stack Marquee */}
       <div className="tech-marquee mt-10">
         <div className="tech-track">
-          {[
-            "html",
-            "css",
-            "js",
-            "mongodb",
-            "express",
-            "react",
-            "nodejs",
-            "tailwind",
-            "mui",
-            "github",
-            "postman",
-            "npm",
-            "vercel",
-            "render",
-            "eraser",
-            "googlecloud",
-            "googleauth",
-            "notion",
-            "hugginface",
-            "json",
-            "api",
-            "jwt",
-            "vite",
-          ].map((icon, idx) => (
-            <span key={idx}>
+          {techIcons.concat(techIcons).map((icon, idx) => (
+            <span key={idx} className="mx-4">
               <img
-                src={`/images/${icon}.png`}
-                alt={icon}
-                className="w-10 h-10"
+                src={icon.src}
+                alt={icon.alt}
+                className="w-10 h-10 object-contain"
               />
             </span>
           ))}
