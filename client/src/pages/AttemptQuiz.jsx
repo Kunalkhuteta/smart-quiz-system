@@ -5,7 +5,7 @@ import ThemedButton from "../components/ThemedButton";
 import { useTheme } from "../context/ThemeContext";
 import "../styles/AttemptQuiz.css";
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL || "https://smart-quiz-system.onrender.com";
+const API_BASE = "https://smart-quiz-system.onrender.com";
 
 const AttemptQuiz = () => {
   const { mode } = useTheme();

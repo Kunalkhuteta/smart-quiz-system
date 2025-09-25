@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-const API_BASE =  process.env.REACT_APP_API_BASE_URL || "https://smart-quiz-system.onrender.com";
+const API_BASE = "https://smart-quiz-system.onrender.com";
 
 const CreateQuiz = () => {
   const { quizId } = useParams(); // For editing mode

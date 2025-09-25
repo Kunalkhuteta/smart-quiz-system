@@ -33,7 +33,7 @@ import render from "../images/render.png";
 import eraser from "../images/eraser.png";
 
 const API_BASE =
-  process.env.REACT_APP_API_BASE_URL || "https://smart-quiz-system.onrender.com";
+"https://smart-quiz-system.onrender.com";
 
 const Dashboard = () => {
   const navigate = useNavigate();
