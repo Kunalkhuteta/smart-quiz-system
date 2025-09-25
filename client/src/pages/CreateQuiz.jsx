@@ -90,12 +90,12 @@ const CreateQuiz = () => {
       navigate("/dashboard");
     } catch (err) {
       console.error("Error saving quiz:", err.response?.data || err.message);
-      alert("❌ Error saving quiz");
+      alert("❌ Error saving quiz, try again");
     }
   };
 
   if (loading) return <p>Loading quiz...</p>;
-
+    
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
       <h1 className="text-3xl font-bold text-center mb-6">
