@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import ThemedButton from "../components/ThemedButton";
 import { useTheme } from "../context/ThemeContext";
@@ -9,7 +9,6 @@ const API_BASE = "https://smart-quiz-system.onrender.com";
 
 const AttemptQuiz = () => {
   const { mode } = useTheme();
-  const navigate = useNavigate();
   const { quizId } = useParams();
 
   const [quiz, setQuiz] = useState(null);
@@ -17,6 +16,7 @@ const AttemptQuiz = () => {
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [certificateData, setCertificateData] = useState(null);
 
   useEffect(() => {
     const fetchQuiz = async () => {
@@ -41,41 +41,74 @@ const AttemptQuiz = () => {
   };
 
   const handleSubmit = async () => {
-    if (!window.confirm("Are you sure you want to submit the quiz?")) return;
-    setSubmitting(true);
+  if (!window.confirm("Are you sure you want to submit the quiz?")) return;
+  setSubmitting(true);
 
+  try {
+    const token = localStorage.getItem("token");
+
+    const answersArray = quiz.questions.map((q, idx) => {
+      const selected = answers[idx] || null;
+      const correct = q.answer; // ✅ match schema
+      return {
+        question: q.question,
+        selected,   // ✅ schema expects "selected"
+        correct,    // ✅ schema expects "correct"
+        isCorrect: selected === correct,
+      };
+    });
+
+    const totalCorrect = answersArray.filter((a) => a.isCorrect).length;
+    const totalWrong = answersArray.length - totalCorrect;
+
+    await axios.post(
+      `${API_BASE}/api/quiz/attempt/submit`,
+      { quizId: quiz._id, answers: answersArray },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    alert(
+      `✅ Quiz submitted!\nCorrect: ${totalCorrect}\nWrong: ${totalWrong}\nScore: ${totalCorrect}/${answersArray.length}`
+    );
+
+    // Store certificate data for download button
+    setCertificateData({
+      studentName: localStorage.getItem("name") || "Student",
+      quizName: quiz.title,
+      obtainedMarks: totalCorrect,
+      totalMarks: answersArray.length,
+    });
+  } catch (err) {
+    console.error("Submit attempt error:", err.response?.data || err.message);
+    alert("⚠️ Error submitting quiz.");
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+
+  const handleDownloadCertificate = async () => {
+    if (!certificateData) return;
     try {
-      const token = localStorage.getItem("token");
-
-      const answersArray = quiz.questions.map((q, idx) => {
-        const selectedOption = answers[idx] || null;
-        return {
-          question: q.question,
-          selectedOption,
-          correctAnswer: q.answer,
-          isCorrect: selectedOption === q.answer,
-        };
-      });
-
-      const totalCorrect = answersArray.filter((a) => a.isCorrect).length;
-      const totalWrong = answersArray.length - totalCorrect;
-
-      await axios.post(
-        `${API_BASE}/api/quiz/attempt/submit`,
-        { quizId: quiz._id, answers: answersArray },
-        { headers: { Authorization: `Bearer ${token}` } }
+      const res = await axios.post(
+        `${API_BASE}/api/certificates/generate`,
+        certificateData,
+        { responseType: "blob" }
       );
 
-      alert(
-        `✅ Quiz submitted!\nCorrect: ${totalCorrect}\nWrong: ${totalWrong}\nScore: ${totalCorrect}/${answersArray.length}`
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `${certificateData.studentName}-certificate.pdf`
       );
-
-      navigate("/attempts");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
     } catch (err) {
-      console.error("Submit attempt error:", err.response?.data || err.message);
-      alert("⚠️ Error submitting quiz.");
-    } finally {
-      setSubmitting(false);
+      console.error("❌ Certificate download failed:", err);
+      alert("⚠️ Failed to download certificate.");
     }
   };
 
@@ -118,10 +151,16 @@ const AttemptQuiz = () => {
         <p>No questions found in this quiz.</p>
       )}
 
-      <div className="submit-button-wrapper mt-6">
-        <ThemedButton onClick={handleSubmit} disabled={submitting}>
-          {submitting ? "Submitting..." : "Submit Quiz"}
-        </ThemedButton>
+      <div className="submit-button-wrapper mt-6 flex flex-col items-center gap-4">
+        {!certificateData ? (
+          <ThemedButton onClick={handleSubmit} disabled={submitting}>
+            {submitting ? "Submitting..." : "Submit Quiz"}
+          </ThemedButton>
+        ) : (
+          <ThemedButton onClick={handleDownloadCertificate}>
+            🎓 Download Certificate
+          </ThemedButton>
+        )}
       </div>
     </div>
   );
