@@ -12,6 +12,8 @@ const quizAttemptSchema = new mongoose.Schema({
     ref: "Quiz",
     required: true,
   },
+
+quizType: { type: String, enum: ["daily", "teacher"], required: true },
   answers: [
     {
       question: String,
@@ -20,12 +22,12 @@ const quizAttemptSchema = new mongoose.Schema({
       isCorrect: Boolean,
     },
   ],
-  score: Number,
-  total: Number,
-  submittedAt: {
-    type: Date,
-    default: Date.now,
-  },
+  score: { type: Number, required: true },
+  total: { type: Number, required: true },
+  correctCount: { type: Number }, // ✅ new
+  wrongCount: { type: Number },   // ✅ new
+  submittedAt: { type: Date, default: Date.now },
+
 });
 
 module.exports = mongoose.model("QuizAttempt", quizAttemptSchema);

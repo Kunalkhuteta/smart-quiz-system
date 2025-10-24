@@ -9,7 +9,7 @@ const referralRoutes = require("./routes/referralRoutes");
 const certificateRoutes = require("./routes/certificateRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const QuizAttempt = require("./models/QuizAttempt");
-
+const dailyQuizRoutes = require("./routes/dailyQuiz");
 const app = express();
 
 // ✅ Allowed origins
@@ -46,7 +46,7 @@ app.use("/api/chatbot", chatRoutes);
 app.use("/api/referrals", referralRoutes);
 app.use("/api", authRoutes);
 app.use("/api/certificates", certificateRoutes);
-
+app.use("/api/dailyQuiz", dailyQuizRoutes);
 // ✅ Test route
 app.get("/api/test", (req, res) => res.json({ msg: "Backend working 🔥" }));
 

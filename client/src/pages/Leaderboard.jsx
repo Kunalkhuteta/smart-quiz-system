@@ -131,33 +131,7 @@ const Leaderboard = () => {
         </div>
       </div>
 
-      {/* 🌊 Animated Background Waves */}
-      <div className="waves">
-        <svg
-          className="wave wave1"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 320"
-          preserveAspectRatio="none"
-        >
-          <path
-            fill="#9333ea"
-            fillOpacity="0.4"
-            d="M0,192L48,213.3C96,235,192,277,288,261.3C384,245,480,171,576,133.3C672,96,768,96,864,128C960,160,1056,224,1152,229.3C1248,235,1344,181,1392,154.7L1440,128L1440,320L0,320Z"
-          ></path>
-        </svg>
-        <svg
-          className="wave wave2"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 320"
-          preserveAspectRatio="none"
-        >
-          <path
-            fill="#4338ca"
-            fillOpacity="0.3"
-            d="M0,256L48,245.3C96,235,192,213,288,202.7C384,192,480,192,576,213.3C672,235,768,277,864,288C960,299,1056,277,1152,245.3C1248,213,1344,171,1392,149.3L1440,128L1440,320L0,320Z"
-          ></path>
-        </svg>
-      </div>
+      
     </div>
   );
 };

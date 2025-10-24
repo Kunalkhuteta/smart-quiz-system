@@ -30,7 +30,12 @@ const AttemptDetails = () => {
           `${process.env.REACT_APP_API_BASE_URL}/api/quiz/attempts/${id}`,
           config
         );
-        setAttempt(res.data);
+
+        // Ensure safe structure
+        const data = res.data || {};
+        data.answers = Array.isArray(data.answers) ? data.answers : [];
+
+        setAttempt(data);
       } catch (err) {
         console.error("Failed to fetch attempt:", err);
         setError("Failed to fetch attempt details");
@@ -100,6 +105,8 @@ const AttemptDetails = () => {
     );
   }
 
+  if (!attempt) return null;
+
   return (
     <div
       className={`admin-bg min-h-screen p-4 ${
@@ -115,40 +122,61 @@ const AttemptDetails = () => {
 
         <div className="attempt-info mb-4">
           <p>
-            <strong>🧑 Username:</strong> {attempt.username}
+            <strong>🧑 Username:</strong> {attempt.name || "N/A"}
           </p>
           <p>
-            <strong>✅ Score:</strong> {attempt.score} / {attempt.total}
+            <strong>✅ Score:</strong> {attempt.score ?? 0} / {attempt.total ?? 0}
+          </p>
+          <p>
+            <strong>✔️ Correct:</strong> {attempt.correctCount ?? 0}
+          </p>
+          <p>
+            <strong>❌ Wrong:</strong> {attempt.wrongCount ?? 0}
           </p>
           <p>
             <strong>🗓️ Submitted:</strong>{" "}
-            {new Date(attempt.submittedAt).toLocaleString()}
+            {attempt.submittedAt
+              ? new Date(attempt.submittedAt).toLocaleString()
+              : "N/A"}
           </p>
         </div>
 
-        <ul className="answers-list">
-          {attempt.answers.map((ans, idx) => {
-            const isCorrect = ans.isCorrect;
-            return (
-              <li
-                key={idx}
-                className={`answer-item ${isCorrect ? "correct" : "wrong"}`}
-              >
-                <p className="font-semibold mb-1">
-                  Q{idx + 1}: {ans.question}
-                </p>
-                <p className={`text-sm mb-0.5 ${isCorrect ? "text-green-500" : "text-red-500"}`}>
-                  <strong>Your Answer:</strong> {ans.selected || "Not answered"} {isCorrect ? "✅" : "❌"}
-                </p>
-                {!isCorrect && (
-                  <p className="text-blue-500 text-sm">
-                    <strong>Correct Answer:</strong> {ans.correct}
+        {attempt.answers.length === 0 ? (
+          <p className="text-center text-gray-500">No question data available.</p>
+        ) : (
+          <ul className="answers-list">
+            {attempt.answers.map((ans, idx) => {
+              const isCorrect = !!ans.isCorrect;
+              const questionText = ans.question || "Question not available";
+              const selected = ans.selected || "Not answered";
+              const correct = ans.correct || "N/A";
+
+              return (
+                <li
+                  key={idx}
+                  className={`answer-item ${isCorrect ? "correct" : "wrong"}`}
+                >
+                  <p className="font-semibold mb-1">
+                    Q{idx + 1}: {questionText}
                   </p>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+                  <p
+                    className={`text-sm mb-0.5 ${
+                      isCorrect ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    <strong>Your Answer:</strong> {selected}{" "}
+                    {isCorrect ? "✅" : "❌"}
+                  </p>
+                  {!isCorrect && (
+                    <p className="text-blue-500 text-sm">
+                      <strong>Correct Answer:</strong> {correct}
+                    </p>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
 
         <div className="admin-back-btn mt-4">
           <ThemedButton onClick={() => window.history.back()} variant="default">

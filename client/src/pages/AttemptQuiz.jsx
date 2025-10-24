@@ -46,37 +46,33 @@ const AttemptQuiz = () => {
 
   try {
     const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
 
+    // Build answers array in backend format
     const answersArray = quiz.questions.map((q, idx) => {
       const selected = answers[idx] || null;
-      const correct = q.answer; // ✅ match schema
-      return {
-        question: q.question,
-        selected,   // ✅ schema expects "selected"
-        correct,    // ✅ schema expects "correct"
-        isCorrect: selected === correct,
-      };
+      return selected;
     });
 
-    const totalCorrect = answersArray.filter((a) => a.isCorrect).length;
-    const totalWrong = answersArray.length - totalCorrect;
-
-    await axios.post(
-      `${API_BASE}/api/quiz/attempt/submit`,
-      { quizId: quiz._id, answers: answersArray },
+    // Send to backend
+    const res = await axios.post(
+      `${API_BASE}/api/dailyQuiz/submit`,
+      { quizId: quiz._id, userId, answers: answersArray },
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
+    const { score, total, correctCount, wrongCount } = res.data;
+
     alert(
-      `✅ Quiz submitted!\nCorrect: ${totalCorrect}\nWrong: ${totalWrong}\nScore: ${totalCorrect}/${answersArray.length}`
+      `✅ Quiz submitted!\nCorrect: ${correctCount}\nWrong: ${wrongCount}\nScore: ${score}/${total}`
     );
 
-    // Store certificate data for download button
+    // Store certificate data
     setCertificateData({
       studentName: localStorage.getItem("name") || "Student",
       quizName: quiz.title,
-      obtainedMarks: totalCorrect,
-      totalMarks: answersArray.length,
+      obtainedMarks: score,
+      totalMarks: total,
     });
   } catch (err) {
     console.error("Submit attempt error:", err.response?.data || err.message);
@@ -111,7 +107,7 @@ const AttemptQuiz = () => {
       alert("⚠️ Failed to download certificate.");
     }
   };
-
+    
   if (loading) return <p className="text-center mt-4">⏳ Loading quiz...</p>;
   if (error) return <p className="text-center mt-4 text-red-500">{error}</p>;
   if (!quiz) return <p className="text-center mt-4">❌ Quiz not found.</p>;

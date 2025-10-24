@@ -13,6 +13,7 @@ import AdminPanel from "./pages/AdminPanel";
 import Chatbot from "./components/Chatbot";
 import CreateQuiz from "./pages/CreateQuiz";
 import AttemptQuiz from "./pages/AttemptQuiz";
+import DailyQuizPage from "./pages/DailyQuizPage";
 
 function App() {
   return (
@@ -40,6 +41,8 @@ function App() {
  <Route path="/create-quiz" element={<CreateQuiz />} />
  <Route path="/edit-quiz/:quizId" element={<CreateQuiz />} /> {/* Edit Quiz */}
  <Route path="/attempt-quiz/:quizId" element={<AttemptQuiz />} />
+ <Route path="/dailyQuiz" element={<DailyQuizPage />} />
+
 
       </Routes>
      

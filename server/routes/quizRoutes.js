@@ -182,30 +182,34 @@ router.post("/create", protect, isTeacher, async (req, res) => {
   }
 });
 
-// ----------------------------
-// Teacher - Get Own Quizzes
-// ----------------------------
-router.get("/teacher-quizzes", protect, isTeacher, async (req, res) => {
+// Fetch quizzes created by teacher (exclude daily)
+router.get("/teacher-quizzes", async (req, res) => {
   try {
-    const quizzes = await Quiz.find({ createdBy: req.user._id });
+    const quizzes = await Quiz.find({
+      createdBy: req.user.id,
+      isDaily: { $ne: true }, // exclude daily quizzes
+    }).sort({ createdAt: -1 });
     res.json(quizzes);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error fetching teacher quizzes:", err);
+    res.status(500).json({ message: "Failed to fetch teacher quizzes" });
   }
 });
 
-// ----------------------------
-// Student - Get Quizzes Linked to Teacher
-// ----------------------------
-router.get("/student-quizzes", protect, async (req, res) => {
+
+// Fetch all available quizzes for students (exclude daily)
+router.get("/student-quizzes", async (req, res) => {
   try {
-    if (!req.user.referredBy) return res.json([]);
-    const quizzes = await Quiz.find({ createdBy: req.user.referredBy });
+    const quizzes = await Quiz.find({
+      isDaily: { $ne: true }, // exclude daily quizzes
+    }).sort({ createdAt: -1 });
     res.json(quizzes);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error fetching student quizzes:", err);
+    res.status(500).json({ message: "Failed to fetch student quizzes" });
   }
 });
+
 
 // ----------------------------
 // Get Quiz by ID

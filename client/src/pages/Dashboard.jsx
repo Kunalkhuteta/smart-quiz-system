@@ -183,7 +183,11 @@ const Dashboard = () => {
           <Link to="/create-quiz">
             <ThemedButton variant="view">➕ Create Quiz</ThemedButton>
           </Link>
-        )}
+          )} 
+          <Link to="/dailyQuiz">
+            <ThemedButton variant="view">Daily Quiz</ThemedButton>
+          </Link>
+          
       </div>
 
       {/* ✅ Tech Stack Marquee */}
