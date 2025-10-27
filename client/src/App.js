@@ -14,6 +14,7 @@ import Chatbot from "./components/Chatbot";
 import CreateQuiz from "./pages/CreateQuiz";
 import AttemptQuiz from "./pages/AttemptQuiz";
 import DailyQuizPage from "./pages/DailyQuizPage";
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   return (
@@ -47,7 +48,7 @@ function App() {
       </Routes>
      
       <Chatbot />
-   
+   <Analytics />
     </Router>
   );
 }
