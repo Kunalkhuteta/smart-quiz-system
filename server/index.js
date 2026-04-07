@@ -16,8 +16,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:3000", // frontend dev
   "http://localhost:5000", // backend dev
-  "https://smart-quiz-system-uuqh.vercel.app",
-  "https://smart-quiz-system-uuqh-1gzketfmw-kunal-khutetas-projects.vercel.app"
+  "https://smart-quiz-system-zeta.vercel.app/",
 ];
 
 // ✅ CORS middleware
