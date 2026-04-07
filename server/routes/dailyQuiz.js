@@ -35,15 +35,15 @@ router.post("/", async (req, res) => {
       let aiRes; // define outside the try block
       try {
         aiRes = await axios.post(
-          "https://openrouter.ai/api/v1/chat/completions",
+          "https://router.huggingface.co/v1/chat/completions",
           {
-            model: "meta-llama/llama-3.3-8b-instruct:free", // ✅ safe free model
+            model: "Qwen/Qwen2.5-72B-Instruct",
             messages: [{ role: "user", content: message }],
+            max_tokens: 1500
           },
-          
           {
             headers: {
-              Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, // ✅ Use OpenRouter key
+              Authorization: `Bearer ${process.env.HUGGING_FACE_API_TOKEN}`,
               "Content-Type": "application/json",
             },
           }
@@ -83,17 +83,18 @@ router.post("/", async (req, res) => {
       }
 
       // ✅ Save the quiz
-      quize = new Quiz({
+      let newQuiz = new Quiz({
         title: `${subject} Daily Quiz`,
         subject,
         isDaily: true,
         createdBy: userId || null,
         questions: aiQuiz.questions,
       });
-      await quize.save();
+      await newQuiz.save();
+      quiz = newQuiz;
     }
 
-    res.json(quize);
+    res.json(quiz);
   } catch (err) {
     console.error("Daily Quiz Error:", err);
     res.status(500).json({ message: "Failed to generate quiz" });

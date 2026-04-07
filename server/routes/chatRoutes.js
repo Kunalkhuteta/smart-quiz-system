@@ -4,16 +4,17 @@ const router = express.Router();
 router.post("/chat", async (req, res) => {
   try {
     const { message } = req.body;
-    // const msg=`Make the asked question arranged in sequence for a chatbot web app and answer it in brief and if you don't know the answer, just say "Sorry, I cannot answer that." and don't try to make up an answer. Here is the question: ${message}`;
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    
+    const response = await fetch("https://router.huggingface.co/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        Authorization: `Bearer ${process.env.HUGGING_FACE_API_TOKEN}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "meta-llama/llama-3.3-8b-instruct:free",
+        model: "Qwen/Qwen2.5-72B-Instruct",
         messages: [{ role: "user", content: message }],
+        max_tokens: 1500
       }),
     });
     

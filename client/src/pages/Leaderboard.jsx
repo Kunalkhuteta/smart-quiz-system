@@ -15,7 +15,7 @@ const Leaderboard = () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/api/quiz/leaderboard`,
+          `${process.env.REACT_APP_API_BASE}/api/quiz/leaderboard`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setData(res.data);

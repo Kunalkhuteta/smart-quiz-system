@@ -20,13 +20,13 @@ const AdminPanel = () => {
     try {
       const token = localStorage.getItem("token");
       const usersRes = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/api/quiz/admin/users`,
+        `${process.env.REACT_APP_API_BASE}/api/quiz/admin/users`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setUsers(usersRes.data);
 
       const attemptsRes = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/api/quiz/admin/attempts`,
+        `${process.env.REACT_APP_API_BASE}/api/quiz/admin/attempts`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setAttempts(attemptsRes.data.attempts);
@@ -43,7 +43,7 @@ const AdminPanel = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `${process.env.REACT_APP_API_BASE_URL}/api/quiz/admin/users/${id}`,
+        `${process.env.REACT_APP_API_BASE}/api/quiz/admin/users/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setUsers(users.filter((u) => u._id !== id));
@@ -59,7 +59,7 @@ const AdminPanel = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.delete(
-        `${process.env.REACT_APP_API_BASE_URL}/api/quiz/admin/attempts/${id}`,
+        `${process.env.REACT_APP_API_BASE}/api/quiz/admin/attempts/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setAttempts(attempts.filter((a) => a._id !== id));

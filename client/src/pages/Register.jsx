@@ -27,9 +27,9 @@ const Register = () => {
     setMsg("");
 
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/register`, {
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE}/api/register`, {
         ...user,
-        role,
+        role, 
         referralId: role === "student" ? referredBy : null,
       });
       setMsg(res.data.message || "✅ Registered successfully");

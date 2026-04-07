@@ -32,8 +32,7 @@ import tailwind from "../images/tailwind.png";
 import render from "../images/render.png";
 import eraser from "../images/eraser.png";
 
-const API_BASE =
-"https://smart-quiz-system.onrender.com";
+const API_BASE = `${process.env.REACT_APP_API_BASE}`; 
 
 const Dashboard = () => {
   const navigate = useNavigate();

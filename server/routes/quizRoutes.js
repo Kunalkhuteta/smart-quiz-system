@@ -173,8 +173,8 @@ router.delete("/admin/attempts/:id", protect, isAdmin, async (req, res) => {
 // ----------------------------
 router.post("/create", protect, isTeacher, async (req, res) => {
   try {
-    const { title, questions } = req.body;
-    const quiz = new Quiz({ title, questions, createdBy: req.user._id });
+    const { title, subject, questions } = req.body;
+    const quiz = new Quiz({ title, subject, questions, createdBy: req.user._id, isDaily: false });
     await quiz.save();
     res.json({ success: true, quiz });
   } catch (err) {
@@ -183,10 +183,10 @@ router.post("/create", protect, isTeacher, async (req, res) => {
 });
 
 // Fetch quizzes created by teacher (exclude daily)
-router.get("/teacher-quizzes", async (req, res) => {
+router.get("/teacher-quizzes", protect, isTeacher, async (req, res) => {
   try {
     const quizzes = await Quiz.find({
-      createdBy: req.user.id,
+      createdBy: req.user._id,
       isDaily: { $ne: true }, // exclude daily quizzes
     }).sort({ createdAt: -1 });
     res.json(quizzes);
@@ -198,7 +198,7 @@ router.get("/teacher-quizzes", async (req, res) => {
 
 
 // Fetch all available quizzes for students (exclude daily)
-router.get("/student-quizzes", async (req, res) => {
+router.get("/student-quizzes", protect, async (req, res) => {
   try {
     const quizzes = await Quiz.find({
       isDaily: { $ne: true }, // exclude daily quizzes
@@ -230,11 +230,11 @@ router.get("/:quizId", protect, async (req, res) => {
 router.put("/:quizId", protect, isTeacher, async (req, res) => {
   try {
     const { quizId } = req.params;
-    const { title, questions } = req.body;
+    const { title, subject, questions } = req.body;
 
     const quiz = await Quiz.findOneAndUpdate(
       { _id: quizId, createdBy: req.user._id },
-      { title, questions },
+      { title, subject, questions },
       { new: true }
     );
 

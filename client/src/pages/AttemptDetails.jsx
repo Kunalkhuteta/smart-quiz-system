@@ -27,7 +27,7 @@ const AttemptDetails = () => {
 
         const config = { headers: { Authorization: `Bearer ${token}` } };
         const res = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/api/quiz/attempts/${id}`,
+          `${process.env.REACT_APP_API_BASE}/api/quiz/attempts/${id}`,
           config
         );
 

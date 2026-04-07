@@ -25,7 +25,7 @@ const Login = () => {
       localStorage.removeItem("user");
 
       const res = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/api/login`,
+        `${process.env.REACT_APP_API_BASE}/api/login`,
         user
       );
 

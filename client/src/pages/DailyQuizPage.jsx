@@ -8,7 +8,7 @@ import { ToastContainer, toast } from "react-toastify"; // 🍞 Toast notificati
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/DailyQuizPage.css";
 
-const API_BASE = "http://localhost:5000/api"; // change later for deployment
+const API_BASE = `${process.env.REACT_APP_API_BASE}/api`; // change later for deployment
 
 const DailyQuizPage = () => {
   const { mode } = useTheme();

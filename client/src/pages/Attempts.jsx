@@ -17,7 +17,7 @@ const Attempts = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `${process.env.REACT_APP_API_BASE_URL}/api/quiz/attempts`,
+        `${process.env.REACT_APP_API_BASE}/api/quiz/attempts`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setAttempts(res.data.attempts);

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-const API_BASE = "https://smart-quiz-system.onrender.com";
+const API_BASE = `${process.env.REACT_APP_API_BASE}`; // change later for deployment
 
 const CreateQuiz = () => {
   const { quizId } = useParams(); // For editing mode
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
+  const [subject, setSubject] = useState("");
   const [questions, setQuestions] = useState([
     { questionText: "", options: ["", "", "", ""], answer: "" },
   ]);
@@ -26,6 +27,7 @@ const CreateQuiz = () => {
         const quiz = res.data;
 
         setTitle(quiz.title);
+        setSubject(quiz.subject);
         setQuestions(
           quiz.questions.map((q) => ({
             questionText: q.question,
@@ -67,6 +69,7 @@ const CreateQuiz = () => {
       const token = localStorage.getItem("token");
       const payload = {
         title,
+        subject,
         questions: questions.map((q) => ({
           question: q.questionText,
           options: q.options,
@@ -113,6 +116,19 @@ const CreateQuiz = () => {
             value={title}
             placeholder="Enter quiz title..."
             onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
+
+        {/* Quiz Subject */}
+        <div>
+          <label className="block text-lg font-medium mb-1">Subject</label>
+          <input
+            type="text"
+            className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={subject}
+            placeholder="Enter subject (e.g., Maths, Science)..."
+            onChange={(e) => setSubject(e.target.value)}
             required
           />
         </div>
