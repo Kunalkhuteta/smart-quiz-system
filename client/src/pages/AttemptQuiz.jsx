@@ -46,7 +46,9 @@ const AttemptQuiz = () => {
 
   try {
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
+    const userStr = localStorage.getItem("user");
+    const userObj = userStr ? JSON.parse(userStr) : {};
+    const userId = userObj._id || userObj.id || localStorage.getItem("userId");
 
     // Build answers array in backend format
     const answersArray = quiz.questions.map((q, idx) => {
@@ -69,7 +71,7 @@ const AttemptQuiz = () => {
 
     // Store certificate data
     setCertificateData({
-      studentName: localStorage.getItem("name") || "Student",
+      studentName: userObj?.name || localStorage.getItem("name") || "Student",
       quizName: quiz.title,
       obtainedMarks: score,
       totalMarks: total,

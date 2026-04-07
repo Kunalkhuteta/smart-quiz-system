@@ -76,14 +76,14 @@ const DailyQuizPage = () => {
   // Submit Quiz
   const handleSubmitQuiz = async (auto = false) => {
     if (!quiz) return toast.warning("⚠️ No quiz to submit.");
-    if (!user?.id) return toast.info("🔐 Please login to submit quiz.");
+    if (!user?._id && !user?.id) return toast.info("🔐 Please login to submit quiz.");
     clearInterval(timerRef.current);
 
     setSubmitting(true);
     try {
       const res = await axios.post(`${API_BASE}/dailyQuiz/submit`, {
         quizId: quiz._id,
-        userId: user.id,
+        userId: user._id || user.id,
         answers,
       });
 
